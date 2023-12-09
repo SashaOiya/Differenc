@@ -1,0 +1,16 @@
+digraph G { 
+node [shape = record];
+ "006C54C8"  "006C54C8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: + "];
+"006C54C8" -> "006C54B0" 
+ "006C54C8" -> "006C5468" 
+ "006C54B0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: * "];
+"006C54B0" -> "006C5498" 
+ "006C54B0" -> "006C5480" 
+ "006C5498" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: 1 "];
+ "006C5480" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: x "];
+ "006C5468" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: * "];
+"006C5468" -> "006C16C0" 
+ "006C5468" -> "006C16A8" 
+ "006C16C0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: x "];
+ "006C16A8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: 1 "];
+}

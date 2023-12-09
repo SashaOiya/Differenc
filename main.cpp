@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <time.h>
 
 #ifdef DEBUGG
 #define $ printf ( "function <%s> line <%d>\n ", __PRETTY_FUNCTION__, __LINE__ );
@@ -17,8 +18,9 @@ int p = 0;
 
 enum Node_Type_t {
     NUM = 0,
-    OP = 1,
-    VAR = 2
+    OP  = 1,
+    VAR = 2,
+    KEY = 3
 };
 
 enum Option_t {
@@ -28,7 +30,8 @@ enum Option_t {
     OP_MUL = '*',  // *
     OP_VAR = 'x',  // x
     OP_BRA = '(',  // (
-    CL_BRA = ')'   // )
+    CL_BRA = ')',  // )
+    OP_POW = '^'   // ^
 };
 
 struct Node_t {
@@ -55,11 +58,12 @@ enum Errors_t {
 };
 
 int GetFileSize ( FILE * f );
-Node_t *GetN ();
-Node_t *GetG ( char * str, struct Node_t *tree );
-Node_t *GetE ();
-Node_t *GetT ();
-Node_t *GetP ();
+Node_t *GetN  ();
+Node_t *GetG  ( char * str, struct Node_t *tree );
+Node_t *GetE  ();
+Node_t *GetT  ();
+Node_t *GetP  ();
+Node_t *GetId ();
 void Analitic ( char *buffer, struct Node_t *tree );
 void Tree_Text_Dump ( const struct Node_t *tree_node );
 Node_t *Create_Node ( Option_t option, int value, struct Node_t *left, struct Node_t *right );
@@ -69,7 +73,9 @@ double Eval ( const struct Node_t *node );
 Errors_t FromType_ToOption ( struct Node_t *tree_node );
 Node_t *d ( const struct Node_t *tree );
 char *Skip_Spaces ( char *buffer );
+Node_t *c ( const struct Node_t *tree );
 
+FILE *logfile = fopen ( "logs/log.html", "w" );
 
 int main ()
 {
@@ -92,7 +98,7 @@ int main ()
     //Analitic ( buffer, tree.start );
 
     Tree_Graph_Dump ( tree.start );
-    //Tree_Text_Dump ( tree.start );
+    Tree_Text_Dump ( tree.start );
 
     FromType_ToOption ( tree.start );
 
@@ -129,6 +135,25 @@ Node_t *GetN ()
     assert ( p > prev_p );
 
     return Create_Node ( (Option_t)NUM, val, nullptr, nullptr );
+}
+
+Node_t *GetId ()
+{
+    char data[50] = {};//size
+    int prev_p = p;
+
+    for ( int i = 0; isalpha( s[p] ); ) {
+        data[i++] = s[p];
+        ++p;
+    }
+    assert ( p > prev_p );
+    if ( strcmp ( data, "x" ) == 0 ) {
+
+        return Create_Node ( (Option_t)VAR, OP_VAR, nullptr, nullptr );
+    }
+    printf ( "NO X\n" );
+
+    return Create_Node ( (Option_t)KEY, -1, nullptr, nullptr );  // val???
 }
 
 int GetFileSize ( FILE * f )
@@ -201,12 +226,20 @@ Node_t *GetP ()
 {
     if ( s[p] == '(' ) {
 
-        Node_t *val = 0;
+        Node_t *val = nullptr;
         p++;
         val = GetE ();
 
         assert ( s[p] == ')' );
         p++;
+
+        return val;
+    }
+    else if ( isalpha ( s[p] ) ) {
+
+        Node_t *val = GetId ();
+
+        // function Id '(' E ')'
 
         return val;
     }
@@ -309,6 +342,8 @@ void Tree_Text_Dump ( const struct Node_t *tree_node )
 
 Errors_t Tree_Graph_Dump ( const struct Node_t *tree )
 {
+    static int file_count = 0;
+
     FILE *tree_dump = fopen ( "tree.dot", "w" );
     if ( !tree_dump ) {
         perror ( "File opening failed" );
@@ -323,12 +358,15 @@ Errors_t Tree_Graph_Dump ( const struct Node_t *tree )
     Tree_Dump_Body ( tree, tree_dump );
 
     fprintf ( tree_dump, "}\n" );
+    fclose ( tree_dump );
 
     //system ( "del list.png" );
-    //system ( "dot -T png tree.dot -o tree.png" );
+    const int SIZE = 100;
+    char name[100];
+    fprintf( logfile, "<img src=\"tree%d.png\" alt=\"-\" width=\"500\" height=\"600\">\n", file_count);
+    sprintf( name, "dot -T png tree.dot -o logs/tree%d.png", file_count++ );
+    system ( name );
     //system ( "tree.png" );
-
-    fclose ( tree_dump );
 
     return OK_TREE;
 }
@@ -413,26 +451,8 @@ Errors_t FromType_ToOption ( struct Node_t *tree_node )
         return OK_TREE;
     }
     if ( tree_node->type == OP ) {
-        if      ( tree_node->value == '-' ) {
-$            tree_node->type = (Node_Type_t)OP_SUB;
-        }
-        else if ( tree_node->value == '+' ) {
-$           tree_node->type = (Node_Type_t)OP_ADD;
-        }
-        else if (  tree_node->value == '/' ) {
-$          tree_node->type = (Node_Type_t)OP_DIV;
-        }
-        else if (  tree_node->value == '*' ) {
-            tree_node->type = (Node_Type_t)OP_MUL;
-        }
-        else if (  tree_node->value == 'x' ) {
-            tree_node->type = (Node_Type_t)OP_VAR;
-        }
-        else {
-            printf ( "ERROR TYPE\n" );
-
-            return ERR_CTYPE;
-        }
+        tree_node->type = (Node_Type_t)tree_node->value;
+        // error
     }
     FromType_ToOption ( tree_node->left  );
     FromType_ToOption ( tree_node->right );
@@ -453,7 +473,7 @@ Node_t *d ( const struct Node_t *tree )
     }
     else if ( tree->type == VAR ) {
 
-        return Create_Node ( (Option_t)VAR, 1, nullptr, nullptr );
+        return Create_Node ( (Option_t)NUM, 1, nullptr, nullptr );
     }
     else {
         switch ( tree->type ) {
@@ -466,8 +486,14 @@ Node_t *d ( const struct Node_t *tree )
                 break;
             }
             case OP_MUL : {
-                return Create_Node ( (Option_t)OP, OP_ADD, Create_Node ( (Option_t)OP, OP_MUL, d ( tree->left ), d ( tree->right ) ),
-                                                           Create_Node ( (Option_t)OP, OP_MUL, d ( tree->left ), d ( tree->right ) ) );
+                return Create_Node ( (Option_t)OP, OP_ADD, Create_Node ( (Option_t)OP, OP_MUL, d ( tree->left ), c ( tree->right ) ),
+                                                           Create_Node ( (Option_t)OP, OP_MUL, c ( tree->left ), d ( tree->right ) ) );
+                break;
+            }
+            case OP_DIV : {
+                return Create_Node ( (Option_t)OP, OP_DIV, Create_Node ( (Option_t)OP, OP_SUB, Create_Node ( (Option_t)OP, OP_MUL, d ( tree->left ), c ( tree->right ) ),
+                                                                                               Create_Node ( (Option_t)OP, OP_MUL, c ( tree->left ), d ( tree->right ) )),
+                                                           Create_Node ( (Option_t)OP, OP_MUL, c ( tree->right ), c ( tree->right ) ) );
                 break;
             }
             // default
@@ -475,6 +501,17 @@ Node_t *d ( const struct Node_t *tree )
     }
     //return tree_c;
 }
+
+Node_t *c ( const struct Node_t *tree )
+{
+    if ( tree == nullptr ) {
+
+        return nullptr;
+    }
+
+    return Create_Node ( (Option_t)tree->type, tree->value, tree->left, tree->right );
+}
+
 
 
 
