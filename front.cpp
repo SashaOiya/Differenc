@@ -1,102 +1,7 @@
-#include <stdio.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
-#include <time.h>
-
-#ifdef DEBUGG
-#define $ printf ( "function <%s> line <%d>\n ", __PRETTY_FUNCTION__, __LINE__ );
-#else
-#define $
-#endif
-
-enum Node_Type_t {
-    NUM = 0,
-    OP  = 1,
-    VAR = 2,
-    KEY = 3
-};
-
-enum Option_t {
-    OP_ADD = '+',  // +
-    OP_SUB = '-',  // -
-    OP_DIV = '/',  // /
-    OP_MUL = '*',  // *
-    OP_VAR = 'x',  // x
-    OP_BRA = '(',  // (
-    CL_BRA = ')',  // )
-    OP_POW = '^'   // ^
-};
-
-struct Node_t {
-    int value       = 0;
-    Node_Type_t type;
-    Node_t *left     = 0;
-    Node_t *right    = 0;
-    int optim_count  = 0;
-};
-
-struct Tree_t {
-    Node_t *start = nullptr;
-    //Array
-};
-
-enum Errors_t {
-    OK_TREE   = 0,
-    ERR_FREAD = 1,
-    ERR_INPUT = 2,
-    ERR_FOPEN = 3,
-    ERR_RLINE = 4,
-    ERR_CALLO = 5,
-    ERR_CYCLE = 6,
-    ERR_CTYPE = 7,
-    OK_FILE   = 8
-};
-
-struct File_t {
-    char *file_name = nullptr;
-    FILE *front_f = nullptr;
-    char *out_buffer = nullptr;
-    int file_size = 0;
-};
-
-struct Position_t {
-    char *data = nullptr;
-    int index = 0;
-}
-
-int GetFileSize ( FILE * f );
-Node_t *Get_Number  ();
-Node_t *GetG ( const char *buffer, struct Node_t *Tree );
-Node_t *GetE ( struct Position_t *Position );
-Node_t *GetT  ();
-Node_t *GetP  ();
-Node_t *GetId ();
-void Analitic ( char *buffer, struct Node_t *tree );
-void Tree_Text_Dump ( const struct Node_t *tree_node );
-Node_t *Create_Node ( Option_t option, int value, struct Node_t *left, struct Node_t *right );
-Errors_t Tree_Graph_Dump ( const struct Node_t *tree );
-void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump );
-double Eval ( const struct Node_t *node );
-Errors_t FromType_ToOption ( struct Node_t *tree_node );
-Node_t *d ( const struct Node_t *tree );
-char *Skip_Spaces ( char *buffer );
-Node_t *c ( const struct Node_t *tree );
-void Optimization_Const ( struct Node_t *tree );
-void Optimization_Option ( struct Node_t **tree );
-void Optimization ( struct Node_t *tree ) ;
-void Dump_Front_End ( const struct Node_t *tree );
-void Write_File_Proc ( const struct Node_t *tree, FILE *start_f );
-Errors_t File_Reader ( struct File_t *File );
-
+#include "recurs_des.h"
+#include "front.h"
 // Ctor
-// Dtor
-
-//char *s = nullptr;
-//int p = 0;
+// Dtor[[[[[[[[[[[[[[[[
 
 FILE *logfile = fopen ( "logs/log.html", "w" );
 
@@ -104,7 +9,7 @@ int main ( int argc, char *argv[] )
 {
     struct Tree_t Tree = {};
     struct File_t File = {};
-    File.file_name = "start.txt"; // argv[1]
+    File.file_name = argv[1]; // argv[1]
     File_Reader ( &File );
 
     Tree.start = GetG ( File.out_buffer, Tree.start );
@@ -115,7 +20,7 @@ int main ( int argc, char *argv[] )
     Tree_Text_Dump ( Tree.start );
 
     FromType_ToOption ( Tree.start );
-    Dump_Front_End ( Tree.start );
+    File_Write_Front ( Tree.start );
 
     //printf ( "%g\n", Eval ( tree.start ) );
     //Optimization_Const ( tree.start );
@@ -153,51 +58,6 @@ Errors_t File_Reader ( struct File_t *File )
     return OK_FILE;
 }
 
-Node_t *GetG ( const char *buffer, struct Node_t *Tree )
-{
-    struct Position_t Position = {};
-    Position.data = buffer;
-    Position.index = 0;
-    // free
-    //assert ( s[p] == '\0' ); //my_assert
-    Tree = GetE( &Position ); // return
-
-    return Tree;
-}
-
-Node_t *Get_Number ()
-{
-    int val = 0;
-    int prev_p = p;
-
-    while ( s[p] >= '0' && s[p] <= '9' ) {
-        val = val * 10 + s[p] - '0';
-        ++p;
-    }
-    assert ( p > prev_p );
-
-    return Create_Node ( (Option_t)NUM, val, nullptr, nullptr );
-}
-
-Node_t *GetId ()
-{
-    char data[50] = {};//size
-    int prev_p = p;
-
-    for ( int i = 0; isalpha( s[p] ); ) {
-        data[i++] = s[p];
-        ++p;
-    }
-    assert ( p > prev_p );
-    if ( strcmp ( data, "x" ) == 0 ) {
-
-        return Create_Node ( (Option_t)VAR, OP_VAR, nullptr, nullptr );
-    }
-    printf ( "NO X\n" );
-
-    return Create_Node ( (Option_t)KEY, -1, nullptr, nullptr );  // val???
-}
-
 int GetFileSize ( FILE * f )
 {
     int prev = ftell ( f );
@@ -207,89 +67,6 @@ int GetFileSize ( FILE * f )
     fseek ( f, prev, SEEK_SET );
 
     return size_not_blue;
-}
-
-Node_t *GetE ( struct Position_t *Position )
-{
-    Node_t *val = GetT ();
-    while ( Position->data[Position->index] == '+' ||
-            Position->data[Position->index] == '-' )
-    {
-        int element = Position->data[Position->index];
-        (Position->index)++;
-        Node_t *val_2 = GetT ();
-
-        switch ( element ) {
-            case '+' : {
-                val = Create_Node( (Option_t)OP, OP_ADD, val, val_2 );
-                break;
-            }
-            case '-' : {
-                val = Create_Node( (Option_t)OP, OP_SUB, val, val_2 );
-                break;
-            }
-            default : {
-                printf ( "Error" );
-                break;
-            }
-        }
-    }
-    return val;
-}
-
-Node_t *GetT ()
-{
-    Node_t *val = GetP ();
-
-    while ( s[p] == '*' || s[p] == '/' ) {
-        char op = s[p];
-        p++;
-
-        Node_t *val_2 = GetP ();
-
-        switch ( op ) {
-            case '*' : {
-                val = Create_Node( (Option_t)OP, OP_MUL, val, val_2 );
-                break;
-            }
-            case '/' : {
-                val = Create_Node( (Option_t)OP, OP_DIV, val, val_2 );
-                break;
-            }
-            default : {
-                printf ( "Error" );
-                break;
-            }
-        }
-    }
-    return val;
-}
-
-Node_t *GetP ()
-{
-    if ( s[p] == '(' ) {
-
-        Node_t *val = nullptr;
-        p++;
-        val = GetE ();
-
-        assert ( s[p] == ')' );
-        p++;
-
-        return val;
-    }
-    else if ( isalpha ( s[p] ) ) {
-
-        Node_t *val = GetId ();
-
-        // function Id '(' E ')'
-
-        return val;
-    }
-    else {
-
-        return Get_Number ();
-    }
 }
 
 Node_t *Create_Node ( Option_t option, int value, struct Node_t *left, struct Node_t *right )
@@ -308,7 +85,10 @@ Node_t *Create_Node ( Option_t option, int value, struct Node_t *left, struct No
 
 char *Skip_Spaces ( char *buffer )
 {
-    while ( *buffer == ' ' ) {
+    while ( *buffer == ' '  ||
+            *buffer == '\t' ||
+            *buffer == '\n' ) {
+
         ++buffer;
     }
 
@@ -443,7 +223,7 @@ double Eval ( const struct Node_t *node )
 {
     if ( node == nullptr ) {
 
-        return NULL;
+        return 0;
     }
     if ( node->type == NUM ) {
 
@@ -507,7 +287,6 @@ Errors_t FromType_ToOption ( struct Node_t *tree_node )
 
 Node_t *d ( const struct Node_t *tree )
 {
-    // dump
     if ( tree == nullptr ) {
 
         return nullptr;
@@ -552,7 +331,10 @@ Node_t *d ( const struct Node_t *tree )
                                                            Create_Node ( (Option_t)OP, OP_MUL, c ( tree->right ), c ( tree->right ) ) );
                 break;
             }
-            // default
+            default    : {
+                printf ( "Option error\n" );
+                break;
+            }
         }
     }
     //return tree_c;
@@ -572,17 +354,17 @@ void Optimization_Const ( struct Node_t *tree )
 {
 $   if ( tree == nullptr || tree->right == nullptr || tree->left == nullptr ) {
 
-        return ; //
+        return ;
     }
-
 $   if ( tree->left->type  == NUM &&
          tree->right->type == NUM &&
          tree->left != nullptr   ) {
+
 $       tree->value = (int)Eval ( tree );
 $       tree->type = NUM;
-$       tree->left  = nullptr;
+$       tree->left  = nullptr; // node_del
 $       tree->right = nullptr;
-        ++(tree->optim_count);
+        ++(tree->optim_count);  // ?
     }
     else {
 $       Optimization_Const ( tree->left );
@@ -605,7 +387,7 @@ $           (*tree)->type  = NUM;
 $           (*tree)->left  = nullptr;
 $           (*tree)->right = nullptr;
         }
-        else if ( (*tree)->left->type  == NUM && (*tree)->left->value  == 1 ) {
+        else if ( (*tree)->left->type  == NUM && (*tree)->left->value  == 1 ) {  // func
             (*tree)->left = nullptr;
             (*tree) = (*tree)->right;
         }
@@ -621,23 +403,24 @@ $       Optimization_Option ( &(*tree)->right );
     }
 }
 
-void Dump_Front_End ( const struct Node_t *tree )
+void File_Write_Front ( const struct Node_t *tree )
 {
     FILE *asm_f = fopen ( "asm.txt", "w" );
 
-    Write_File_Proc ( tree, asm_f );
+    File_Write_Asm_Text ( tree, asm_f );
 
     fprintf ( asm_f, "hlt;" );
 }
 
-void Write_File_Proc ( const struct Node_t *tree, FILE *start_f )
+void File_Write_Asm_Text ( const struct Node_t *tree, FILE *start_f )
 {
     if ( tree == nullptr ) {
 
         return ;
     }
-    Write_File_Proc ( tree->left, start_f );
-    Write_File_Proc ( tree->right, start_f );
+    File_Write_Asm_Text ( tree->left, start_f );
+    File_Write_Asm_Text ( tree->right, start_f );
+
     if ( tree->type == NUM ) {
         fprintf ( start_f, "push %d;\n", tree->value );
     }
@@ -645,19 +428,5 @@ void Write_File_Proc ( const struct Node_t *tree, FILE *start_f )
         fprintf ( start_f, "mul;\n" );
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
