@@ -8,7 +8,8 @@ Node_t *GetG ( char *buffer, struct Node_t *Tree ) //const
     Position.index = 0;
     // free //my_assert
     Tree = GetE( &Position ); // return
-    assert ( Position.data[Position.index] == '\0' );
+    //Tree = GetA( &Position );
+    //assert ( Position.data[Position.index] == '\0' );
 
     return Tree;
 }
@@ -38,12 +39,30 @@ Node_t *GetId ( struct Position_t *Position )
     }
     assert ( Position->index > prev_index );
     if ( strcmp ( data, "x" ) == 0 ) {
+        Node_t *val_2 = GetA ( Position );
+        if ( val_2 != nullptr ) {
+            return val_2;
+        }
 
         return Create_Node ( (Option_t)VAR, OP_VAR, nullptr, nullptr );
     }
+    else if ( strcmp ( data, "if" ) == 0 ) {
+        /*while ( Position->data[Position->index] == ' '  ||     //krivooooooooooo
+                Position->data[Position->index] == '\t' ||
+                Position->data[Position->index] == '\n' ) {
+
+        ++(Position->index);
+        }*/
+        Node_t *val_2 = GetA ( Position );
+        assert ( Position->data[++(Position->index)] == ')' );
+        val_2->type = KEY;
+        val_2->value = KEY_W_IF;
+
+        return val_2;//Create_Node ( (Option_t)KEY, KEY_W_IF, nullptr, nullptr );
+    }
     printf ( "NO X\n" );
 
-    return Create_Node ( (Option_t)KEY, -1, nullptr, nullptr );  // val???
+    return nullptr;  // val???
 }
 
 Node_t *GetE ( struct Position_t *Position )
@@ -108,9 +127,14 @@ Node_t *GetP ( struct Position_t *Position )
 {
     if ( Position->data[Position->index] == '(' ) {
         Node_t *val = nullptr;
-        (Position->index)++;
-        val = GetE ( Position );
-
+        ++(Position->index); // ()++
+        if ( isdigit ( Position->data[Position->index] ) ) {
+            val = GetE ( Position );
+        }
+        else if ( isalpha ( Position->data[Position->index] ) ) {
+            val = GetId ( Position );       // x if while d
+            printf ( "goood\n" ); //
+        }
         assert ( Position->data[Position->index] == ')' );
         (Position->index)++;
 
@@ -126,6 +150,31 @@ Node_t *GetP ( struct Position_t *Position )
     }
     else {
 
-        return Get_Number ( Position );
+        return GetE ( Position );  // get_n
     }
 }
+
+Node_t *GetA ( struct Position_t *Position )
+{
+    Node_t *val = GetId ( Position );     // only_X
+    assert ( val != nullptr ); // assert
+
+    ++(Position->index);
+    if ( Position->data[Position->index] == '=' ) {
+        ++(Position->index);
+        Node_t *val_2 = GetE ( Position );      //  |
+                                                //  |
+        val->value = (int)Eval ( val_2 );//int  //  ^
+
+        return val;
+    }
+
+    return nullptr;
+}
+
+/*Node_t *GetIf ( struct Position_t *Position )
+{
+    Node_t *val = GetId ( Position );
+    assert ( val != nullptr ); // assert
+ */
+
