@@ -21,7 +21,8 @@ enum Node_Type_t {
     NUM = 0,
     OP  = 1,
     VAR = 2,
-    KEY = 3
+    KEY = 3,
+    FUN = 4
 };
 
 enum Option_t {
@@ -34,6 +35,13 @@ enum Option_t {
     CL_BRA = ')',  // )
     OP_POW = '^'   // ^
 };
+
+enum Key_Word {
+    KEY_W_IF = 1,
+    KEY_W_WHILE = 2,
+    KEY_W_D     = 3,
+    KEY_W_DONT  = 4
+}; // more words
 
 struct Node_t {
     int value       = 0;

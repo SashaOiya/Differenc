@@ -15,5 +15,6 @@ Node_t *GetT  ( struct Position_t *Position );
 Node_t *GetP  ( struct Position_t *Position );
 Node_t *GetId ( struct Position_t *Position );
 Node_t *GetId ( struct Position_t *Position );
+Node_t *GetA ( struct Position_t *Position );
 
 #endif      // RECURS_DESCENT

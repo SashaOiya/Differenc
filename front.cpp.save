@@ -195,7 +195,7 @@ Errors_t Tree_Graph_Dump ( const struct Node_t *tree )
     return OK_TREE;
 }
 
-void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump )
+void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump ) // +
 {
     if ( tree == nullptr) {
 
@@ -205,10 +205,15 @@ void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump )
         fprintf ( tree_dump , " \"%p\" [shape = Mrecord, style = filled, fillcolor = lightpink "
                           " label = \"data: %d \"];\n",tree, tree->value );
     }
-    else {
+    else ( tree->type == VAR ||
+         ( tree->type == OP ) {
         fprintf ( tree_dump , " \"%p\" [shape = Mrecord, style = filled, fillcolor = lightpink "
                           " label = \"data: %c \"];\n",tree, tree->value );
     }
+    else {
+        printf ( "Add more options\n" );
+    }
+    
     if ( tree->left != nullptr ) {
         fprintf ( tree_dump, "\"%p\" -> \"%p\" ", tree, tree->left );
     }
@@ -220,7 +225,7 @@ void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump )
     Tree_Dump_Body ( tree->right, tree_dump );
 }
 
-double Eval ( const struct Node_t *node )
+double Eval ( const struct Node_t *node ) // +
 {
     if ( node == nullptr ) {
 
@@ -230,10 +235,10 @@ double Eval ( const struct Node_t *node )
 
         return node->value;
     }
-    else if ( node->type == VAR ) {
-
-        //return atof ( node->data );   //
+    else if ( node->type == VAR ){
+        printf ( "Error, because i dont't know this value\n" );
     }
+    
     double left  = Eval ( node->left );
     double right = Eval ( node->right );
 
@@ -246,12 +251,12 @@ double Eval ( const struct Node_t *node )
             }
             case OP_SUB : {
 
-                return left - right; // left or right
+                return left - right; 
                 break;
             }
             case OP_DIV : {
 
-                return left / right; // left or right// /
+                return left / right; 
                 break;
             }
             case OP_MUL : {

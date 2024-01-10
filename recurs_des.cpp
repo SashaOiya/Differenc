@@ -8,8 +8,7 @@ Node_t *GetG ( char *buffer, struct Node_t *Tree ) //const
     Position.index = 0;
     // free //my_assert
     Tree = GetE( &Position ); // return
-    //Tree = GetA( &Position );
-    //assert ( Position.data[Position.index] == '\0' );
+    assert ( Position.data[Position.index] == '\0' );
 
     return Tree;
 }
@@ -38,31 +37,29 @@ Node_t *GetId ( struct Position_t *Position )
         ++(Position->index);
     }
     assert ( Position->index > prev_index );
+
+    /*if ( Position->data[Position->index] == '(' )
+    {
+        //int func_name_code = SearchFuncName (arg, names);
+        //printf ("func_code = %d\n", func_name_code);
+        //TreeNode* val = NULL;
+        //data->position++;
+        Node_t *val = GetE ( Position );
+        (Position->index)++;
+        return NewNode (FUNC, func_name_code, NULL, val);
+    }*/
+    if ( strcmp ( data, "if") == 0 ) {
+        Node_t *val = GetE ( Position );
+        (Position->index)++;
+
+        return Create_Node ( (Option_t)KEY, KEY_W_IF, NULL, val );
+    }
     if ( strcmp ( data, "x" ) == 0 ) {
-        Node_t *val_2 = GetA ( Position );
-        if ( val_2 != nullptr ) {
-            return val_2;
-        }
 
         return Create_Node ( (Option_t)VAR, OP_VAR, nullptr, nullptr );
     }
-    else if ( strcmp ( data, "if" ) == 0 ) {
-        /*while ( Position->data[Position->index] == ' '  ||     //krivooooooooooo
-                Position->data[Position->index] == '\t' ||
-                Position->data[Position->index] == '\n' ) {
 
-        ++(Position->index);
-        }*/
-        Node_t *val_2 = GetA ( Position );
-        assert ( Position->data[++(Position->index)] == ')' );
-        val_2->type = KEY;
-        val_2->value = KEY_W_IF;
-
-        return val_2;//Create_Node ( (Option_t)KEY, KEY_W_IF, nullptr, nullptr );
-    }
-    printf ( "NO X\n" );
-
-    return nullptr;  // val???
+    return Create_Node ( (Option_t)KEY, KEY_W_DONT, nullptr, nullptr );  // val???
 }
 
 Node_t *GetE ( struct Position_t *Position )
@@ -127,14 +124,9 @@ Node_t *GetP ( struct Position_t *Position )
 {
     if ( Position->data[Position->index] == '(' ) {
         Node_t *val = nullptr;
-        ++(Position->index); // ()++
-        if ( isdigit ( Position->data[Position->index] ) ) {
-            val = GetE ( Position );
-        }
-        else if ( isalpha ( Position->data[Position->index] ) ) {
-            val = GetId ( Position );       // x if while d
-            printf ( "goood\n" ); //
-        }
+        (Position->index)++;
+        val = GetE ( Position );
+
         assert ( Position->data[Position->index] == ')' );
         (Position->index)++;
 
@@ -150,31 +142,24 @@ Node_t *GetP ( struct Position_t *Position )
     }
     else {
 
-        return GetE ( Position );  // get_n
+        return Get_Number ( Position );
     }
 }
 
-Node_t *GetA ( struct Position_t *Position )
+Node_t* GetA ( struct Position_t *Position )
 {
-    Node_t *val = GetId ( Position );     // only_X
-    assert ( val != nullptr ); // assert
-
-    ++(Position->index);
-    if ( Position->data[Position->index] == '=' ) {
-        ++(Position->index);
-        Node_t *val_2 = GetE ( Position );      //  |
-                                                //  |
-        val->value = (int)Eval ( val_2 );//int  //  ^
-
-        return val;
+    Node_t* val = GetE ( Position );
+    //SkipSpaces (data);
+    // изменить и не давать ставить знаки сравнения в теле циклов и условных операторов
+    if ( Position->data[Position->index] == '=' ||
+         Position->data[Position->index] == '>' ||
+         Position->data[Position->index] == '<') // добавить больше/меньше
+    {
+        char operation = Position->data[Position->index];
+        (Position->index)++;
+        Node_t* val_2 = GetId ( Position );
+        return Create_Node( (Option_t)OP, operation, val, val_2 );//NewNode (OP, GetOpCode (operation), val, val2);
     }
-
-    return nullptr;
+    return val;
 }
-
-/*Node_t *GetIf ( struct Position_t *Position )
-{
-    Node_t *val = GetId ( Position );
-    assert ( val != nullptr ); // assert
- */
 

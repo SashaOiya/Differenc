@@ -1,16 +1,20 @@
 digraph G { 
 node [shape = record];
- "006C54C8"  "006C54C8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: + "];
-"006C54C8" -> "006C54B0" 
- "006C54C8" -> "006C5468" 
- "006C54B0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: * "];
-"006C54B0" -> "006C5498" 
- "006C54B0" -> "006C5480" 
- "006C5498" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: 1 "];
- "006C5480" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: x "];
- "006C5468" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: * "];
-"006C5468" -> "006C16C0" 
- "006C5468" -> "006C16A8" 
- "006C16C0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: x "];
- "006C16A8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: 1 "];
+ "001D0D60"  "001D0D60" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: + "];
+"001D0D60" -> "001D0CA0" 
+ "001D0D60" -> "001D0D40" 
+ "001D0CA0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: * "];
+"001D0CA0" -> "001D0C60" 
+ "001D0CA0" -> "001D0C80" 
+ "001D0C60" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: 3 "];
+ "001D0C80" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: 2 "];
+ "001D0D40" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: * "];
+"001D0D40" -> "001D0CC0" 
+ "001D0D40" -> "001D0D20" 
+ "001D0CC0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: x "];
+ "001D0D20" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: + "];
+"001D0D20" -> "001D0CE0" 
+ "001D0D20" -> "001D0D00" 
+ "001D0CE0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: 2 "];
+ "001D0D00" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "data: 5 "];
 }
