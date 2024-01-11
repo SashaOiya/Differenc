@@ -18,11 +18,11 @@
 #endif
 
 enum Node_Type_t {
-    NUM = 0,
-    OP  = 1,
-    VAR = 2,
-    KEY = 3,
-    FUN = 4
+    NUM = 1,
+    OP  = 2,
+    VAR = 3,
+    KEY = 4,
+    FUN = 5
 };
 
 enum Option_t {
@@ -48,7 +48,6 @@ struct Node_t {
     Node_Type_t type;
     Node_t *left     = 0;
     Node_t *right    = 0;
-    int optim_count  = 0;
 };
 
 struct Tree_t {
@@ -65,7 +64,8 @@ enum Errors_t {
     ERR_CALLO = 5,
     ERR_CYCLE = 6,
     ERR_CTYPE = 7,
-    OK_FILE   = 8
+    OK_FILE   = 8,
+    OK_OCCURR = 9
 };
 
 struct File_t {
@@ -84,15 +84,17 @@ void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump );
 void Tree_Text_Dump ( const struct Node_t *tree_node );
 
 double Eval ( const struct Node_t *node );
-Node_t *Create_Node ( Option_t option, int value, struct Node_t *left, struct Node_t *right );
+Node_t *Create_Node ( Node_Type_t option, int value, struct Node_t *left, struct Node_t *right );
 Errors_t FromType_ToOption ( struct Node_t *tree_node );
 char *Skip_Spaces ( char *buffer );
+void Node_Free ( struct Node_t **tree );
 
 Node_t *d ( const struct Node_t *tree );
 Node_t *c ( const struct Node_t *tree );
 
-void Optimization_Const ( struct Node_t *tree );
-void Optimization_Option ( struct Node_t **tree );
+int Optimization_Const ( struct Node_t *tree );
+int Optimization_Option ( struct Node_t **tree );
+void Optimization ( struct Node_t *tree );
 
 void File_Write_Front ( const struct Node_t *tree );
 void File_Write_Asm_Text ( const struct Node_t *tree, FILE *start_f );
