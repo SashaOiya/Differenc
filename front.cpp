@@ -1,6 +1,5 @@
 #include "recurs_des.h"
 #include "front.h"
-// Ctor
 // Dtor[[[[[[[[[[[[[[[[
 
 FILE *logfile = fopen ( "logs/log.html", "w" );
@@ -9,41 +8,41 @@ int main ( int argc, char *argv[] )
 {
     struct Tree_t Tree = {};
     struct File_t File = {};
-    File.file_name = argv[1];
-    File_Reader ( &File );
 
-    Tree.start = GetG ( File.out_buffer, Tree.start );
-
-    //Analitic ( buffer, tree.start );
+    Diff_Ctor ( argv[1], &File, &Tree );
 
     Tree_Graph_Dump ( Tree.start );
     Tree_Text_Dump ( Tree.start );
 
-    FromType_ToOption ( Tree.start );
-
-    //File_Write_Front ( Tree.start );
-
-    //printf ( "%g\n", Eval ( tree.start ) );
-    //Optimization_Const ( tree.start );
     Node_t *tree_c = d ( Tree.start );  // Tree_c
 
     Tree_Graph_Dump ( tree_c );
     Tree_Text_Dump ( tree_c );
 
+    free ( File.out_buffer );
     fclose ( File.front_f );
 
     return 0;
 }
 
-Errors_t File_Reader ( struct File_t *File )
+Errors_t File_Reader ( struct File_t *File )  // +
 {
     File->front_f = fopen ( File->file_name, "r" );
-    assert ( File->front_f != nullptr );   // assert
+    if ( !File->front_f ) {
+        printf ( "File opening error\n" );
+
+        return ERR_FREAD;
+    }
 
     File->file_size = GetFileSize ( File->front_f );
 
     File->out_buffer = ( char *)calloc ( File->file_size + 1, sizeof ( char ) );
-    assert ( File->out_buffer != nullptr ); // assert
+    if ( !File->out_buffer ) {
+        printf ( "buffer memory allocation error\n" );
+        fclose ( File->front_f );
+
+        return ERR_FREAD;
+    }
 
     int ret_code = fread ( File->out_buffer, sizeof( File->out_buffer[0] ), File->file_size, File->front_f );
     if ( ret_code != File->file_size ) {
@@ -53,6 +52,9 @@ Errors_t File_Reader ( struct File_t *File )
         else if ( ferror ( File->front_f ) ) {
             perror ( "Error reading test.bin" );
         }
+        free ( File->out_buffer );
+        fclose ( File->front_f );
+
         return ERR_FREAD;
     }
 
@@ -86,63 +88,31 @@ Node_t *Create_Node ( Node_Type_t option, int value, struct Node_t *left, struct
     return tree_c;
 }
 
-char *Skip_Spaces ( char *buffer )   // -----
+char *File_Skip_Spaces ( char *data, int file_size ) // +
 {
-    while ( *buffer == ' '  ||
-            *buffer == '\t' ||
-            *buffer == '\n' ) {
+    char *buffer = (char *)calloc ( file_size + 1, sizeof ( char ) );
+    if ( !buffer ) {
+        printf ( "buffer memory allocation error\n" );
 
-        ++buffer;
+        return data;
     }
+    int position = 0;
+
+    for ( ; *data != '\0'; ++data ) {
+        while ( *data == ' '  ||
+                *data == '\t' ||
+                *data == '\n' ) {
+
+            ++data;
+        }
+        buffer[position++] = *data;
+    }
+    buffer[position] = '\0';
 
     return buffer;
 }
 
-/*void Analitic ( char *buffer, struct Node_t *tree )
-{
-    if ( tree == nullptr || buffer == '\0' ) {
-
-        return ;
-    }
-    buffer = Skip_Spaces ( buffer );
-    char *start = buffer;
-
-    tree->type = OP;
-
-    if ( isdigit ( *buffer ) ) {
-        while ( isdigit ( *buffer ) ) {
-            ++buffer;
-        }
-        tree->type = NUM;
-        tree->value = atoi ( start );
-
-        //Analitic ( buffer, tree->left );
-        //Analitic ( buffer, tree->right );
-    }
-
-    if      ( *buffer == '-' ) {
-         tree->value = OP_SUB;
-    }
-    else if ( *buffer == '+' ) {
-        tree->value = OP_ADD;
-    }
-    else if ( *buffer == '/' ) {
-        tree->value = OP_DIV;
-    }
-    else if ( *buffer == '*' ) {
-        tree->value = OP_MUL;
-    }
-    else if ( *buffer == 'x' ) {
-        tree->type = VAR;
-        tree->value = OP_VAR;
-    }
-    ++buffer;  //error
-    Analitic ( buffer, tree->left );
-    Analitic ( buffer, tree->right );
-
-} */
-
-void Tree_Text_Dump ( const struct Node_t *tree_node )
+void Tree_Text_Dump ( const struct Node_t *tree_node ) // +
 {
     if ( tree_node == nullptr) {
 
@@ -155,8 +125,19 @@ void Tree_Text_Dump ( const struct Node_t *tree_node )
     if ( tree_node->type == NUM ) {
         printf ( "%d", tree_node->value );
     }
-    else if ( tree_node->type == VAR ||
-              tree_node->type == OP  ) {
+    else if ( tree_node->type == OP && tree_node->value == OP_SIN ) {
+              printf ( "sin" );
+    }
+    else if ( tree_node->type == OP && tree_node->value == OP_COS ) {
+              printf ( "cos" );
+    }
+    else if ( tree_node->type == OP && tree_node->value == OP_TG  ) {
+              printf ( "tg" );
+    }
+    else if ( tree_node->type == OP && tree_node->value == OP_CTG ) {
+              printf ( "ctg" );
+    }
+    else {
         printf ( "%c", tree_node->value );
     }
 
@@ -213,7 +194,8 @@ void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump ) // +     // n
                              " label = \"data: %c \"];\n", tree, tree->value );
     }
     else {
-        printf ( "Add more options\n" );
+        fprintf ( tree_dump, " \"%p\" [shape = Mrecord, style = filled, fillcolor = lightpink "
+                             " label = \"data: sin \"];\n", tree );    // !!!!!!!!!!!
     }
 
     if ( tree->left != nullptr ) {
@@ -277,23 +259,7 @@ double Eval ( const struct Node_t *node ) // +
     return ERR_CTYPE;
 }
 
-Errors_t FromType_ToOption ( struct Node_t *tree_node ) // ----
-{
-    if ( !tree_node || tree_node->type != OP ) {
-
-        return OK_TREE;
-    }
-    /*if ( tree_node->type == OP ) {
-        tree_node->value = (Node_Type_t)tree_node->value;
-        // error
-    } */
-    FromType_ToOption ( tree_node->left  );
-    FromType_ToOption ( tree_node->right );
-
-    return OK_TREE;
-}
-
-Node_t *d ( const struct Node_t *tree )  // +
+Node_t *d ( const struct Node_t *tree )  // +    // node
 {
     if ( tree == nullptr ) {
 
@@ -333,16 +299,52 @@ Node_t *d ( const struct Node_t *tree )  // +
             }
             case OP_DIV : {
                 Node_t *tree_c = Create_Node ( OP, OP_DIV, Create_Node ( OP, OP_SUB, Create_Node ( OP, OP_MUL, d ( tree->left ), c ( tree->right ) ),
-                                                                           Create_Node ( OP, OP_MUL, c ( tree->left ), d ( tree->right ) ) ),
-                                                 Create_Node ( OP, OP_MUL, c ( tree->right ), c ( tree->right ) ) );
+                                                                                     Create_Node ( OP, OP_MUL, c ( tree->left ), d ( tree->right ) ) ),
+                                                           Create_Node ( OP, OP_MUL, c ( tree->right ), c ( tree->right ) ) );
                 Optimization ( tree_c );
 
                 return tree_c;
                 break;
             }
-            default    : {
-                printf ( "Option error\n" );
+            case OP_SIN : {
+                Node_t *tree_c = c ( tree );
+                tree_c->value = OP_COS;
+                tree_c = Create_Node ( OP, OP_MUL, tree_c, d ( tree->right) );
+
+                return tree_c;
                 break;
+            }
+            case OP_COS : {
+                Node_t *tree_c = c ( tree );
+                tree_c->value = OP_SIN;
+                tree_c  = Create_Node ( OP, OP_MUL, tree_c, d ( tree->right) );
+                tree_c = Create_Node ( OP, OP_MUL, Create_Node ( NUM, -1, nullptr, nullptr ), tree_c );
+
+                return tree_c;
+                break;
+            }
+            case OP_TG  : {
+                Node_t *tree_c = c ( tree );
+                tree_c->value = OP_COS;
+                tree_c = Create_Node ( OP, OP_MUL, tree_c, tree_c );
+                tree_c = Create_Node ( OP, OP_DIV, Create_Node ( NUM, 1, nullptr, nullptr ), tree_c );
+                tree_c = Create_Node ( OP, OP_MUL, tree_c, d ( tree->right ) );
+
+                return tree_c;
+                break;
+            }
+            case OP_CTG  : {
+                Node_t *tree_c = c ( tree );
+                tree_c->value = OP_SIN;
+                tree_c = Create_Node ( OP, OP_MUL, tree_c, tree_c );
+                tree_c = Create_Node ( OP, OP_DIV, Create_Node ( NUM, -1, nullptr, nullptr ), tree_c );
+                tree_c = Create_Node ( OP, OP_MUL, tree_c, d ( tree->right ) );
+
+                return tree_c;
+                break;
+            }
+            default    : {
+             ///////
             }
         }
     }
@@ -445,30 +447,102 @@ void Node_Free ( struct Node_t **tree ) // +
     }
 }
 
-/*void File_Write_Front ( const struct Node_t *tree )
+Errors_t Diff_Ctor ( char *open_file, struct File_t *File, struct Tree_t *Tree ) // +
 {
-    FILE *asm_f = fopen ( "asm.txt", "w" );
+    File->file_name = open_file;
+    Errors_t error_name = File_Reader ( File );
+    if ( error_name != OK_FILE ) {
 
-    File_Write_Asm_Text ( tree, asm_f );
+        return ERR_FREAD;
+    }
+    File->out_buffer = File_Skip_Spaces ( File->out_buffer, File->file_size );
+    Tree->start = GetG ( File->out_buffer, Tree->start );
 
-    fprintf ( asm_f, "hlt;" );
+    return OK_FILE;
 }
 
-void File_Write_Asm_Text ( const struct Node_t *tree, FILE *start_f )
+/*void PrintLatex (TreeNode* node, FILE* latex_file)
 {
-    if ( tree == nullptr ) {
+    switch (node->type)
+    {
+        case OP:
+            LatexOp (node, latex_file);
+            break;
+        case FUNC:
+            TextFuncName (node->right, latex_file, GetFuncName ((int)node->value));
+            break;
+        case NUM:
+            fprintf (latex_file, "%f", (float)node->value);
+            break;
+        case VAR:
+            fprintf (latex_file, "x");
+            break;
+    };
+}
 
-        return ;
-    }
-    File_Write_Asm_Text ( tree->left, start_f );
-    File_Write_Asm_Text ( tree->right, start_f );
+void TextFuncName (TreeNode* node, FILE* file, char* func_name)
+{
+    fprintf (file, "%s ", func_name);
+    if (node->type != OP || node->value != OP_DIV)
+        fprintf (file, "(");
+    PrintLatex (node, file);
+    if (node->type != OP || node->value != OP_DIV)
+        fprintf (file, ")");
+}
 
-    if ( tree->type == NUM ) {
-        fprintf ( start_f, "push %d;\n", tree->value );
-    }
-    if ( tree->type == OP && tree->value == OP_MUL ) {
-        fprintf ( start_f, "mul;\n" );
-    }
-} */
+void LatexOp (TreeNode* node, FILE* latex_file)
+{
+    if (node->value == OP_DIV)
+        fprintf (latex_file, " \\frac{");
 
+    switch (node->left->type)
+    {
+        case NUM:
+        {
+            if (node->value == OP_MUL)
+            {
+                if (node->left->value == -1)
+                    fprintf (latex_file, "-");
+                else
+                    fprintf (latex_file, "%f", (float)node->left->value);
+            }
+            else
+                fprintf (latex_file, "%f", (float)node->left->value);
+            break;
+        }
+        case VAR:
+            fprintf (latex_file, "x");
+            break;
+        default:
+        {
+            PutBracketsBefore (node, latex_file, '(');
+            PrintLatex (node->left, latex_file);
+            PutBracketsBefore (node, latex_file, ')');
+            break;
+        }
+    };
 
+    PutOp (node, latex_file);
+
+    switch (node->right->type)
+    {
+        case NUM:
+            fprintf (latex_file, "%f", (float)node->right->value);
+            break;
+        case VAR:
+            fprintf (latex_file, "x");
+            break;
+        default:
+        {
+            PutBracketsAfter (node, latex_file, '(');
+            PrintLatex (node->right, latex_file);
+            PutBracketsAfter (node, latex_file, ')');
+            break;
+        }
+    };
+
+    if (node->value == OP_EXP || node->value == OP_DIV)
+        fprintf (latex_file, "}");
+}
+
+ */

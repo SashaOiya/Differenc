@@ -4,11 +4,11 @@
 Node_t *GetG ( char *buffer, struct Node_t *Tree ) //const
 {
     struct Position_t Position = {};
-    Position.data = Skip_Spaces ( buffer );
+    Position.data = buffer; // nullptr
     Position.index = 0;
     // free //my_assert
     Tree = GetE( &Position ); // return
-    assert ( Position.data[Position.index] == '\0' );
+    //assert ( Position.data[Position.index] == '\0' );
 
     return Tree;
 }
@@ -24,42 +24,69 @@ Node_t *Get_Number ( struct Position_t *Position )
     }
     assert ( Position->index > prev_index );
 
-    return Create_Node ( (Option_t)NUM, val, nullptr, nullptr );
+    return Create_Node ( NUM, val, nullptr, nullptr );
 }
 
 Node_t *GetId ( struct Position_t *Position )
 {
-    char data[50] = {};//size
-    int prev_index = Position->index;
+    char arg[20] = {};// name and number
+    int counter = 0;
+    int old_position = Position->index;
 
-    for ( int i = 0; isalpha( Position->data[Position->index] ); ) {
-        data[i++] = Position->data[Position->index];
-        ++(Position->index);
+    while ( isalpha ( Position->data[Position->index] ) )  {
+        sprintf ( arg + counter, "%c", Position->data[Position->index] );
+        (Position->index)++;
+        counter++;
     }
-    assert ( Position->index > prev_index );
 
-    /*if ( Position->data[Position->index] == '(' )
-    {
-        //int func_name_code = SearchFuncName (arg, names);
-        //printf ("func_code = %d\n", func_name_code);
-        //TreeNode* val = NULL;
-        //data->position++;
+    int unary_option = 0;
+
+    if ( !strcmp ( arg, "sin" ) ) {
+        unary_option = OP_SIN;
+    }
+    else if ( !strcmp ( arg, "cos" ) ) {
+        unary_option = OP_COS;
+    }
+    else if ( !strcmp ( arg, "tg" ) ) {
+        unary_option = OP_TG;
+    }
+    else if ( !strcmp ( arg, "ctg" ) ) {
+        unary_option = OP_CTG;
+    }
+    if ( unary_option == OP_SIN ||
+         unary_option == OP_COS ||
+         unary_option == OP_TG  ||
+         unary_option == OP_CTG ) {
+
         Node_t *val = GetE ( Position );
         (Position->index)++;
-        return NewNode (FUNC, func_name_code, NULL, val);
-    }*/
-    if ( strcmp ( data, "if") == 0 ) {
-        Node_t *val = GetE ( Position );
-        (Position->index)++;
 
-        return Create_Node ( (Option_t)KEY, KEY_W_IF, NULL, val );
+        switch ( unary_option ) {
+            case OP_SIN : {
+                val = Create_Node( OP, OP_SIN, nullptr, val );
+                break;
+            }
+            case OP_COS : {
+                val = Create_Node( OP, OP_COS, nullptr, val );
+                break;
+            }
+            case OP_TG  : {
+                val = Create_Node( OP, OP_TG , nullptr, val );
+                break;
+            }
+            case OP_CTG : {
+                val = Create_Node( OP, OP_CTG, nullptr, val );
+                break;
+            }
+            default : {
+                printf ( "Error" );    // more information
+                break;
+            }
+        }
+
+        return val;
     }
-    if ( strcmp ( data, "x" ) == 0 ) {
-
-        return Create_Node ( (Option_t)VAR, OP_VAR, nullptr, nullptr );
-    }
-
-    return Create_Node ( (Option_t)KEY, KEY_W_DONT, nullptr, nullptr );  // val???
+    return Create_Node ( VAR, OP_VAR, nullptr, nullptr );
 }
 
 Node_t *GetE ( struct Position_t *Position )
@@ -75,11 +102,11 @@ Node_t *GetE ( struct Position_t *Position )
 
         switch ( element ) {
             case '+' : {
-                val = Create_Node( (Option_t)OP, OP_ADD, val, val_2 );
+                val = Create_Node( OP, OP_ADD, val, val_2 );
                 break;
             }
             case '-' : {
-                val = Create_Node( (Option_t)OP, OP_SUB, val, val_2 );
+                val = Create_Node( OP, OP_SUB, val, val_2 );
                 break;
             }
             default : {
@@ -93,7 +120,7 @@ Node_t *GetE ( struct Position_t *Position )
 
 Node_t *GetT ( struct Position_t *Position )
 {
-    Node_t *val = GetP ( Position );
+    Node_t *val = GetP ( Position );    // unary
 
     while ( Position->data[Position->index] == '*' ||
             Position->data[Position->index] == '/' ) {
@@ -104,11 +131,11 @@ Node_t *GetT ( struct Position_t *Position )
 
         switch ( element ) {
             case '*' : {
-                val = Create_Node( (Option_t)OP, OP_MUL, val, val_2 );
+                val = Create_Node( OP, OP_MUL, val, val_2 );
                 break;
             }
             case '/' : {
-                val = Create_Node( (Option_t)OP, OP_DIV, val, val_2 );
+                val = Create_Node( OP, OP_DIV, val, val_2 );
                 break;
             }
             default : {
@@ -158,8 +185,10 @@ Node_t* GetA ( struct Position_t *Position )
         char operation = Position->data[Position->index];
         (Position->index)++;
         Node_t* val_2 = GetId ( Position );
-        return Create_Node( (Option_t)OP, operation, val, val_2 );//NewNode (OP, GetOpCode (operation), val, val2);
+
+        return Create_Node( OP, operation, val, val_2 );//NewNode (OP, GetOpCode (operation), val, val2);
     }
     return val;
 }
+
 

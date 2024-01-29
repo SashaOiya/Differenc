@@ -33,7 +33,11 @@ enum Option_t {
     OP_VAR = 'x',  // x
     OP_BRA = '(',  // (
     CL_BRA = ')',  // )
-    OP_POW = '^'   // ^
+    OP_POW = '^',  // ^
+    OP_SIN = 's',  // sin
+    OP_COS = 'c',  // cos
+    OP_TG  = 't',  // tg
+    OP_CTG = 'g'   // ctg
 };
 
 enum Key_Word {
@@ -85,8 +89,7 @@ void Tree_Text_Dump ( const struct Node_t *tree_node );
 
 double Eval ( const struct Node_t *node );
 Node_t *Create_Node ( Node_Type_t option, int value, struct Node_t *left, struct Node_t *right );
-Errors_t FromType_ToOption ( struct Node_t *tree_node );
-char *Skip_Spaces ( char *buffer );
+char *File_Skip_Spaces ( char *data, int file_size );
 void Node_Free ( struct Node_t **tree );
 
 Node_t *d ( const struct Node_t *tree );
@@ -98,5 +101,7 @@ void Optimization ( struct Node_t *tree );
 
 void File_Write_Front ( const struct Node_t *tree );
 void File_Write_Asm_Text ( const struct Node_t *tree, FILE *start_f );
+
+Errors_t Diff_Ctor ( char *open_file, struct File_t *File, struct Tree_t *Tree );
 
 #endif  // FRONT_END
