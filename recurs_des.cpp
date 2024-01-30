@@ -31,7 +31,6 @@ Node_t *GetId ( struct Position_t *Position )
 {
     char arg[20] = {};// name and number
     int counter = 0;
-    int old_position = Position->index;
 
     while ( isalpha ( Position->data[Position->index] ) )  {
         sprintf ( arg + counter, "%c", Position->data[Position->index] );
@@ -53,39 +52,18 @@ Node_t *GetId ( struct Position_t *Position )
     else if ( !strcmp ( arg, "ctg" ) ) {
         unary_option = OP_CTG;
     }
-    if ( unary_option == OP_SIN ||
-         unary_option == OP_COS ||
-         unary_option == OP_TG  ||
-         unary_option == OP_CTG ) {
+
+    if ( unary_option == OP_SIN || unary_option == OP_COS ||
+         unary_option == OP_TG  || unary_option == OP_CTG ) {
 
         Node_t *val = GetE ( Position );
         (Position->index)++;
 
-        switch ( unary_option ) {
-            case OP_SIN : {
-                val = Create_Node( OP, OP_SIN, nullptr, val );
-                break;
-            }
-            case OP_COS : {
-                val = Create_Node( OP, OP_COS, nullptr, val );
-                break;
-            }
-            case OP_TG  : {
-                val = Create_Node( OP, OP_TG , nullptr, val );
-                break;
-            }
-            case OP_CTG : {
-                val = Create_Node( OP, OP_CTG, nullptr, val );
-                break;
-            }
-            default : {
-                printf ( "Error" );    // more information
-                break;
-            }
-        }
+        val = Create_Node( OP, unary_option, nullptr, val );
 
         return val;
     }
+
     return Create_Node ( VAR, OP_VAR, nullptr, nullptr );
 }
 
@@ -154,7 +132,7 @@ Node_t *GetP ( struct Position_t *Position )
         (Position->index)++;
         val = GetE ( Position );
 
-        assert ( Position->data[Position->index] == ')' );
+        //assert ( Position->data[Position->index] == ')' );
         (Position->index)++;
 
         return val;

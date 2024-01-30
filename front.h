@@ -9,7 +9,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <time.h>
-//#include "recurs_des.h"
+#include <math.h>
 
 #ifdef DEBUGG
 #define $ printf ( "function <%s> line <%d>\n ", __PRETTY_FUNCTION__, __LINE__ );
@@ -39,13 +39,6 @@ enum Option_t {
     OP_TG  = 't',  // tg
     OP_CTG = 'g'   // ctg
 };
-
-enum Key_Word {
-    KEY_W_IF = 1,
-    KEY_W_WHILE = 2,
-    KEY_W_D     = 3,
-    KEY_W_DONT  = 4
-}; // more words
 
 struct Node_t {
     int value       = 0;
@@ -79,18 +72,15 @@ struct File_t {
     int file_size = 0;
 };
 
-Errors_t File_Reader ( struct File_t *File );
-int GetFileSize ( FILE * f );
-
-//void Analitic ( char *buffer, struct Node_t *tree );
 Errors_t Tree_Graph_Dump ( const struct Node_t *tree );
 void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump );
 void Tree_Text_Dump ( const struct Node_t *tree_node );
 
 double Eval ( const struct Node_t *node );
-Node_t *Create_Node ( Node_Type_t option, int value, struct Node_t *left, struct Node_t *right );
+const char *Get_Op_Name ( int op_type );
 char *File_Skip_Spaces ( char *data, int file_size );
-void Node_Free ( struct Node_t **tree );
+Errors_t File_Reader ( struct File_t *File );
+int GetFileSize ( FILE * f );
 
 Node_t *d ( const struct Node_t *tree );
 Node_t *c ( const struct Node_t *tree );
@@ -99,9 +89,15 @@ int Optimization_Const ( struct Node_t *tree );
 int Optimization_Option ( struct Node_t **tree );
 void Optimization ( struct Node_t *tree );
 
-void File_Write_Front ( const struct Node_t *tree );
-void File_Write_Asm_Text ( const struct Node_t *tree, FILE *start_f );
+Errors_t Diff_Tree_Ctor ( char *open_file, struct File_t *File, struct Tree_t *Tree );
+Errors_t Diff_Tree_Dtor ( struct File_t *File, struct Tree_t *Tree );
+Node_t *Create_Node ( Node_Type_t option, int value, struct Node_t *left, struct Node_t *right );
+void Node_Free ( struct Node_t **tree );
 
-Errors_t Diff_Ctor ( char *open_file, struct File_t *File, struct Tree_t *Tree );
+void LatexOp ( Node_t* node, FILE* latex_file);
+void Print_Latex_Body ( Node_t* node, FILE* latex_file);
+void Print_Latex ( Node_t* node, FILE* latex_file );
+void PutBracketsAfter ( Node_t* node, FILE* latex_file, char bracket_type);
+void PutBracketsBefore ( Node_t* node, FILE* latex_file, char bracket_type);
 
 #endif  // FRONT_END

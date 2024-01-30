@@ -1,6 +1,5 @@
 #include "recurs_des.h"
 #include "front.h"
-// Dtor[[[[[[[[[[[[[[[[
 
 FILE *logfile = fopen ( "logs/log.html", "w" );
 
@@ -9,18 +8,21 @@ int main ( int argc, char *argv[] )
     struct Tree_t Tree = {};
     struct File_t File = {};
 
-    Diff_Ctor ( argv[1], &File, &Tree );
+    Diff_Tree_Ctor ( argv[1], &File, &Tree );
 
     Tree_Graph_Dump ( Tree.start );
     Tree_Text_Dump ( Tree.start );
+
+    FILE* latex_file = fopen ("eval.txt", "w");
+    Print_Latex ( Tree.start, latex_file);
 
     Node_t *tree_c = d ( Tree.start );  // Tree_c
 
     Tree_Graph_Dump ( tree_c );
     Tree_Text_Dump ( tree_c );
 
-    free ( File.out_buffer );
-    fclose ( File.front_f );
+    fclose ( latex_file );
+    Diff_Tree_Dtor ( &File, &Tree );
 
     return 0;
 }
@@ -125,20 +127,9 @@ void Tree_Text_Dump ( const struct Node_t *tree_node ) // +
     if ( tree_node->type == NUM ) {
         printf ( "%d", tree_node->value );
     }
-    else if ( tree_node->type == OP && tree_node->value == OP_SIN ) {
-              printf ( "sin" );
-    }
-    else if ( tree_node->type == OP && tree_node->value == OP_COS ) {
-              printf ( "cos" );
-    }
-    else if ( tree_node->type == OP && tree_node->value == OP_TG  ) {
-              printf ( "tg" );
-    }
-    else if ( tree_node->type == OP && tree_node->value == OP_CTG ) {
-              printf ( "ctg" );
-    }
-    else {
-        printf ( "%c", tree_node->value );
+    else if ( tree_node->type == OP ||
+              tree_node->type == VAR ) {
+        printf ( "%s", Get_Op_Name ( tree_node->value ) );
     }
 
     Tree_Text_Dump ( tree_node->right );
@@ -167,13 +158,11 @@ Errors_t Tree_Graph_Dump ( const struct Node_t *tree )
     fprintf ( tree_dump, "}\n" );
     fclose ( tree_dump );
 
-    //system ( "del list.png" );
     const int SIZE = 100;
     char name[SIZE] = {};
     fprintf( logfile, "<img src=\"tree%d.png\" alt=\"-\" width=\"500\" height=\"600\">\n", file_count);
     sprintf( name, "dot -T png tree.dot -o logs/tree%d.png", file_count++ );
     system ( name );
-    //system ( "tree.png" );
 
     return OK_TREE;
 }
@@ -191,11 +180,7 @@ void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump ) // +     // n
     else if ( tree->type == VAR ||
               tree->type == OP ) {
         fprintf ( tree_dump, " \"%p\" [shape = Mrecord, style = filled, fillcolor = lightpink "
-                             " label = \"data: %c \"];\n", tree, tree->value );
-    }
-    else {
-        fprintf ( tree_dump, " \"%p\" [shape = Mrecord, style = filled, fillcolor = lightpink "
-                             " label = \"data: sin \"];\n", tree );    // !!!!!!!!!!!
+                             " label = \"data: %s \"];\n", tree, Get_Op_Name ( tree->value ) );
     }
 
     if ( tree->left != nullptr ) {
@@ -221,13 +206,15 @@ double Eval ( const struct Node_t *node ) // +
     }
     else if ( node->type == VAR ){
         printf ( "Error, because i dont't know this value\n" );
+
+        return 0;
     }
 
     double left  = Eval ( node->left );
     double right = Eval ( node->right );
 
     if ( node->type == OP ) {
-        switch ( (Option_t) node->value ) {
+        switch ( node->value ) {
             case OP_ADD : {
 
                 return left + right;
@@ -246,6 +233,26 @@ double Eval ( const struct Node_t *node ) // +
             case OP_MUL : {
 
                 return left * right;
+                break;
+            }
+            case OP_SIN : {
+
+                return sin ( right );
+                break;
+            }
+            case OP_COS : {
+
+                return cos ( right );
+                break;
+            }
+            case OP_TG  : {
+
+                return tan ( right );
+                break;
+            }
+            case OP_CTG : {
+
+                return 1 / tan ( right );
                 break;
             }
             default :{
@@ -447,7 +454,7 @@ void Node_Free ( struct Node_t **tree ) // +
     }
 }
 
-Errors_t Diff_Ctor ( char *open_file, struct File_t *File, struct Tree_t *Tree ) // +
+Errors_t Diff_Tree_Ctor ( char *open_file, struct File_t *File, struct Tree_t *Tree ) // +
 {
     File->file_name = open_file;
     Errors_t error_name = File_Reader ( File );
@@ -461,88 +468,170 @@ Errors_t Diff_Ctor ( char *open_file, struct File_t *File, struct Tree_t *Tree )
     return OK_FILE;
 }
 
-/*void PrintLatex (TreeNode* node, FILE* latex_file)
+Errors_t Diff_Tree_Dtor ( struct File_t *File, struct Tree_t *Tree )
+{
+    Node_Free ( &(Tree->start) );
+    free ( File->out_buffer );
+    fclose ( File->front_f );
+}
+
+const char *Get_Op_Name ( int op_type )
+{
+    if ( op_type == OP_SIN ) {
+
+        return "sin";
+    }
+    else if ( op_type == OP_COS ) {
+
+        return "cos";
+    }
+    else if ( op_type == OP_TG ) {
+
+        return "tg";
+    }
+    else if ( op_type == OP_CTG ) {
+
+        return "ctg";
+    }
+
+    return strdup ( (char *)(&op_type) );
+}
+
+void Print_Latex ( Node_t* node, FILE* latex_file )
+{
+    fprintf ( latex_file, "\\[" );
+
+    Print_Latex_Body ( node, latex_file );
+
+    fprintf ( latex_file, "\\]" );
+}
+
+void Print_Latex_Body ( Node_t* node, FILE* latex_file)
 {
     switch (node->type)
     {
-        case OP:
-            LatexOp (node, latex_file);
+        case OP  : {
+            LatexOp ( node, latex_file );
             break;
-        case FUNC:
-            TextFuncName (node->right, latex_file, GetFuncName ((int)node->value));
+        }
+        case NUM : {
+            fprintf ( latex_file, "%d", node->value );
             break;
-        case NUM:
-            fprintf (latex_file, "%f", (float)node->value);
+        }
+        case VAR : {
+            fprintf ( latex_file, "x" );
             break;
-        case VAR:
-            fprintf (latex_file, "x");
-            break;
-    };
+        }
+    }
 }
 
-void TextFuncName (TreeNode* node, FILE* file, char* func_name)
+void PutOp ( Node_t* node, FILE* latex_file)
 {
-    fprintf (file, "%s ", func_name);
-    if (node->type != OP || node->value != OP_DIV)
-        fprintf (file, "(");
-    PrintLatex (node, file);
-    if (node->type != OP || node->value != OP_DIV)
-        fprintf (file, ")");
+    if (node->value == OP_DIV) {
+        fprintf (latex_file, "}{");
+    }
+    else if (node->value == OP_MUL) {
+        fprintf (latex_file, " \\cdot ");
+    }
+    else {
+        fprintf (latex_file, "%s", Get_Op_Name ( node->value ) );
+    }
 }
 
-void LatexOp (TreeNode* node, FILE* latex_file)
+void LatexOp ( Node_t* node, FILE* latex_file)
 {
-    if (node->value == OP_DIV)
+    if ( node->value == OP_DIV ) {
         fprintf (latex_file, " \\frac{");
+    }
 
     switch (node->left->type)
     {
         case NUM:
         {
-            if (node->value == OP_MUL)
+            if ( node->value == OP_MUL)
             {
-                if (node->left->value == -1)
-                    fprintf (latex_file, "-");
-                else
-                    fprintf (latex_file, "%f", (float)node->left->value);
+                if ( node->left->value == -1 ) {
+                    fprintf ( latex_file, "-" );
+                }
+                else {
+                    fprintf ( latex_file, "%d", node->left->value );
+                }
             }
-            else
-                fprintf (latex_file, "%f", (float)node->left->value);
+            else {
+                fprintf (latex_file, "%d", node->left->value);
+            }
             break;
         }
-        case VAR:
-            fprintf (latex_file, "x");
+        case VAR: {
+            fprintf (latex_file, "x" );
             break;
+        }
         default:
         {
             PutBracketsBefore (node, latex_file, '(');
-            PrintLatex (node->left, latex_file);
+            Print_Latex_Body (node->left, latex_file);
             PutBracketsBefore (node, latex_file, ')');
             break;
         }
     };
 
-    PutOp (node, latex_file);
+    PutOp ( node, latex_file );
 
     switch (node->right->type)
     {
-        case NUM:
-            fprintf (latex_file, "%f", (float)node->right->value);
+        case NUM: {
+            fprintf (latex_file, "%d", node->right->value);
             break;
-        case VAR:
+        }
+        case VAR: {
             fprintf (latex_file, "x");
             break;
-        default:
-        {
+        }
+        default: {
             PutBracketsAfter (node, latex_file, '(');
-            PrintLatex (node->right, latex_file);
+            Print_Latex_Body (node->right, latex_file);
             PutBracketsAfter (node, latex_file, ')');
             break;
         }
     };
 
-    if (node->value == OP_EXP || node->value == OP_DIV)
-        fprintf (latex_file, "}");
+    if ( node->value == OP_DIV ) {
+        fprintf ( latex_file, "}" );
+    }
 }
 
- */
+void PutBracketsAfter ( Node_t* node, FILE* latex_file, char bracket_type)
+{
+    if (node->value == OP_MUL)
+    {
+        if ( (node->left->type != NUM || (node->right->type != OP || node->right->value != OP_DIV)) &&
+             (node->left->value != OP_DIV || node->right->value != OP_DIV))
+            fprintf (latex_file, "%c", bracket_type);
+    }
+    else if (node->value != OP_DIV)
+    {
+        if (node->right->value != OP_MUL && node->right->value != OP_DIV &&
+           (node->right->value != OP_ADD && node->right->value != OP_SUB) )
+            fprintf (latex_file, "%c", bracket_type);
+    }
+}
+
+void PutBracketsBefore ( Node_t* node, FILE* latex_file, char bracket_type)
+{
+    if (node->value == OP_MUL)
+    {
+        if ( node->left->value != OP_MUL && (node->left->value != OP_DIV || node->right->value != OP_DIV) )
+            fprintf (latex_file, "%c", bracket_type);
+    }
+    else if (node->value != OP_DIV)
+    {
+        if (node->left->value != OP_MUL && node->left->value != OP_DIV &&
+           (node->left->value != OP_ADD && node->left->value != OP_SUB ) )
+            fprintf (latex_file, "%c", bracket_type);
+    }
+}
+
+/*Node_t *Teilor ( const struct Node_t *tree )
+{
+
+} */
