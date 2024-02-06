@@ -8,13 +8,11 @@ struct Position_t {
     int index = 0;
 };
 
-Node_t *Get_Number ( struct Position_t *Position );
-Node_t *GetG ( char *buffer, struct Node_t *Tree );
-Node_t *GetE ( struct Position_t *Position );
-Node_t *GetT  ( struct Position_t *Position );
-Node_t *GetP  ( struct Position_t *Position );
-Node_t *GetId ( struct Position_t *Position );
-Node_t *GetA ( struct Position_t *Position );
-Node_t* Get_Unary_Op ( struct Position_t *Position );
+Node_t *Get_Number ( struct Position_t *position );
+Node_t *Get_General ( char *buffer, struct Node_t *tree_node );
+Node_t *Get_Expression ( struct Position_t *position );
+Node_t *Get_Term  ( struct Position_t *position );
+Node_t *Get_Partititon   ( struct Position_t *position );
+Node_t *Get_Index ( struct Position_t *position );
 
 #endif      // RECURS_DESCENT

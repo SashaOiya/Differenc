@@ -1,90 +1,87 @@
-//#include "front.h"
 #include "recurs_des.h"
+// Change them all (names)
 
-Node_t *GetG ( char *buffer, struct Node_t *Tree ) //const
+Node_t *Get_General ( char *buffer, struct Node_t *tree_node )
 {
-    struct Position_t Position = {};
-    Position.data = buffer; // nullptr
-    Position.index = 0;
-    // free //my_assert
-    Tree = GetE( &Position ); // return
-    //assert ( Position.data[Position.index] == '\0' );
+    struct Position_t position = {};
+    position.data = buffer;
+    position.index = 0;
+    tree_node = Get_Expression ( &position );
 
-    return Tree;
+    return tree_node;
 }
 
-Node_t *Get_Number ( struct Position_t *Position )
+Node_t *Get_Number ( struct Position_t *position )
 {
-    int val = 0;
-    int prev_index = Position->index;
+    int value = 0;
+    int prev_index = position->index;
 
-    while ( isdigit ( Position->data[Position->index] ) ) {
-        val = val * 10 + Position->data[Position->index] - '0';
-        ++(Position->index);
+    // strtod???
+    while ( isdigit ( position->data[position->index] ) ) {
+        value = value * 10 + position->data[position->index] - '0';
+        ++(position->index);
     }
-    assert ( Position->index > prev_index );
+    assert ( position->index > prev_index );
 
-    return Create_Node ( NUM, val, nullptr, nullptr );
+    return Create_Node ( NODE_TYPE_NUM, value, nullptr, nullptr );
 }
 
-Node_t *GetId ( struct Position_t *Position )
+Node_t *Get_Index ( struct Position_t *position )
 {
-    char arg[20] = {};// name and number
-    int counter = 0;
+    char op_name[20] = {};
 
-    while ( isalpha ( Position->data[Position->index] ) )  {
-        sprintf ( arg + counter, "%c", Position->data[Position->index] );
-        (Position->index)++;
-        counter++;
+    for ( int counter = 0; isalpha ( position->data[position->index] ); (position->index)++, counter++ )  {
+        sprintf ( op_name + counter, "%c", position->data[position->index] );
     }
 
     int unary_option = 0;
-
-    if ( !strcmp ( arg, "sin" ) ) {
+    // #include with #defines maybe
+    if ( !strcmp ( op_name, "sin" ) ) {
         unary_option = OP_SIN;
     }
-    else if ( !strcmp ( arg, "cos" ) ) {
+    else if ( !strcmp ( op_name, "cos" ) ) {
         unary_option = OP_COS;
     }
-    else if ( !strcmp ( arg, "tg" ) ) {
+    else if ( !strcmp ( op_name, "tg" ) ) {
         unary_option = OP_TG;
     }
-    else if ( !strcmp ( arg, "ctg" ) ) {
+    else if ( !strcmp ( op_name, "ctg" ) ) {
         unary_option = OP_CTG;
     }
 
     if ( unary_option == OP_SIN || unary_option == OP_COS ||
          unary_option == OP_TG  || unary_option == OP_CTG ) {
 
-        Node_t *val = GetE ( Position );
-        (Position->index)++;
+        Node_t *exp_node = Get_Expression ( position );
+        (position->index)++;
 
-        val = Create_Node( OP, unary_option, nullptr, val );
+        exp_node = Create_Node( NODE_TYPE_OP, unary_option, nullptr, exp_node );
 
-        return val;
+        return exp_node;
     }
 
-    return Create_Node ( VAR, OP_VAR, nullptr, nullptr );
+    return Create_Node ( NODE_TYPE_VAR, OP_VAR, nullptr, nullptr );
 }
 
-Node_t *GetE ( struct Position_t *Position )
+Node_t *Get_Expression ( struct Position_t *position )
 {
-    Node_t *val = GetT ( Position );
+    Node_t *term_node = Get_Term ( position );
 
-    while ( Position->data[Position->index] == '+' ||
-            Position->data[Position->index] == '-' )
+    // В одном месте проверки на + -
+    while ( position->data[position->index] == '+' ||
+            position->data[position->index] == '-' )
     {
-        int element = Position->data[Position->index];
-        (Position->index)++;
-        Node_t *val_2 = GetT ( Position );
+        int element = position->data[position->index];
+        (position->index)++;
+        Node_t *term_node_right = Get_Term ( position );
 
         switch ( element ) {
             case '+' : {
-                val = Create_Node( OP, OP_ADD, val, val_2 );
+                term_node = Create_Node( NODE_TYPE_OP, OP_ADD, term_node, term_node_right );
                 break;
             }
             case '-' : {
-                val = Create_Node( OP, OP_SUB, val, val_2 );
+                term_node = Create_Node( NODE_TYPE_OP, OP_SUB, term_node, term_node_right );
                 break;
             }
             default : {
@@ -93,27 +90,27 @@ Node_t *GetE ( struct Position_t *Position )
             }
         }
     }
-    return val;
+    return term_node;
 }
 
-Node_t *GetT ( struct Position_t *Position )
+Node_t *Get_Term ( struct Position_t *position )
 {
-    Node_t *val = GetP ( Position );    // unary
+    Node_t *part_node = Get_Partititon ( position );
 
-    while ( Position->data[Position->index] == '*' ||
-            Position->data[Position->index] == '/' ) {
-        char element = Position->data[Position->index];
-        (Position->index)++;
+    while ( position->data[position->index] == '*' ||
+            position->data[position->index] == '/' ) {
+        char element = position->data[position->index];
+        (position->index)++;
 
-        Node_t *val_2 = GetP ( Position );
+        Node_t *part_node_right = Get_Partititon ( position );
 
         switch ( element ) {
             case '*' : {
-                val = Create_Node( OP, OP_MUL, val, val_2 );
+                part_node = Create_Node( NODE_TYPE_OP, OP_MUL, part_node, part_node_right );
                 break;
             }
             case '/' : {
-                val = Create_Node( OP, OP_DIV, val, val_2 );
+                part_node = Create_Node( NODE_TYPE_OP, OP_DIV, part_node, part_node_right );
                 break;
             }
             default : {
@@ -122,51 +119,29 @@ Node_t *GetT ( struct Position_t *Position )
             }
         }
     }
-    return val;
+    return part_node;
 }
 
-Node_t *GetP ( struct Position_t *Position )
+Node_t *Get_Partititon ( struct Position_t *position )
 {
-    if ( Position->data[Position->index] == '(' ) {
-        Node_t *val = nullptr;
-        (Position->index)++;
-        val = GetE ( Position );
+    if ( position->data[position->index] == '(' ) {
+        (position->index)++;
+        Node_t *exp_node = Get_Expression ( position );
 
         //assert ( Position->data[Position->index] == ')' );
-        (Position->index)++;
+        (position->index)++;
 
-        return val;
+        return exp_node;
     }
-    else if ( isalpha ( Position->data[Position->index] ) ) {
+    else if ( isalpha ( position->data[position->index] ) ) {
 
-        Node_t *val = GetId ( Position );
-
-        // function Id '(' E ')'
-
-        return val;
+        return Get_Index ( position );;
     }
     else {
 
-        return Get_Number ( Position );
+        return Get_Number ( position );
     }
 }
 
-Node_t* GetA ( struct Position_t *Position )
-{
-    Node_t* val = GetE ( Position );
-    //SkipSpaces (data);
-    // изменить и не давать ставить знаки сравнения в теле циклов и условных операторов
-    if ( Position->data[Position->index] == '=' ||
-         Position->data[Position->index] == '>' ||
-         Position->data[Position->index] == '<') // добавить больше/меньше
-    {
-        char operation = Position->data[Position->index];
-        (Position->index)++;
-        Node_t* val_2 = GetId ( Position );
-
-        return Create_Node( OP, operation, val, val_2 );//NewNode (OP, GetOpCode (operation), val, val2);
-    }
-    return val;
-}
 
 

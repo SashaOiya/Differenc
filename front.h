@@ -10,6 +10,7 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#include "log.h"
 
 #ifdef DEBUGG
 #define $ printf ( "function <%s> line <%d>\n ", __PRETTY_FUNCTION__, __LINE__ );
@@ -18,30 +19,30 @@
 #endif
 
 enum Node_Type_t {
-    NUM = 1,
-    OP  = 2,
-    VAR = 3,
-    KEY = 4,
-    FUN = 5
+    NODE_TYPE_NUM = 1,
+    NODE_TYPE_OP  = 2,
+    NODE_TYPE_VAR = 3,
+    NODE_TYPE_KEY = 4,
+    NODE_TYPE_FUN = 5
 };
 
 enum Option_t {
-    OP_ADD = '+',  // +
-    OP_SUB = '-',  // -
-    OP_DIV = '/',  // /
-    OP_MUL = '*',  // *
-    OP_VAR = 'x',  // x
-    OP_BRA = '(',  // (
-    CL_BRA = ')',  // )
-    OP_POW = '^',  // ^
-    OP_SIN = 's',  // sin
-    OP_COS = 'c',  // cos
-    OP_TG  = 't',  // tg
-    OP_CTG = 'g'   // ctg
+    OP_ADD    = '+',  // +
+    OP_SUB    = '-',  // -
+    OP_DIV    = '/',  // /
+    OP_MUL    = '*',  // *
+    OP_VAR    = 'x',  // x
+    OP_BRA    = '(',  // (
+    OP_CL_BRA = ')',  // )
+    OP_POW    = '^',  // ^
+    OP_SIN    = 's',  // sin
+    OP_COS    = 'c',  // cos
+    OP_TG     = 't',  // tg
+    OP_CTG    = 'g'   // ctg
 };
 
 struct Node_t {
-    int value       = 0;
+    int value        = 0;
     Node_Type_t type;
     Node_t *left     = 0;
     Node_t *right    = 0;
@@ -97,7 +98,11 @@ void Node_Free ( struct Node_t **tree );
 void LatexOp ( Node_t* node, FILE* latex_file);
 void Print_Latex_Body ( Node_t* node, FILE* latex_file);
 void Print_Latex ( Node_t* node, FILE* latex_file );
-void PutBracketsAfter ( Node_t* node, FILE* latex_file, char bracket_type);
-void PutBracketsBefore ( Node_t* node, FILE* latex_file, char bracket_type);
+void Brackets ( Node_t* node, FILE* latex_file, char bracket_type);
+void Brackets  ( Node_t* node, FILE* latex_file, char bracket_type);
+
+Node_t *Teilor_Body ( const struct Node_t *tree_node, const int number );
+int factorial ( const int number );
+Node_t *Teilor ( struct Node_t *tree_node, const int number );
 
 #endif  // FRONT_END
