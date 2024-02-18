@@ -21,9 +21,7 @@
 enum Node_Type_t {
     NODE_TYPE_NUM = 1,
     NODE_TYPE_OP  = 2,
-    NODE_TYPE_VAR = 3,
-    NODE_TYPE_KEY = 4,
-    NODE_TYPE_FUN = 5
+    NODE_TYPE_VAR = 3
 };
 
 enum Option_t {
@@ -42,28 +40,31 @@ enum Option_t {
 };
 
 struct Node_t {
-    int value        = 0;
+    int value        = 0;     // strange
     Node_Type_t type;
     Node_t *left     = 0;
     Node_t *right    = 0;
 };
 
 struct Tree_t {
-    Node_t *start = nullptr;
+    Node_t *start_node = nullptr;
+    double value = 0;
     //Array
 };
 
 enum Errors_t {
-    OK_TREE   = 0,
-    ERR_FREAD = 1,
-    ERR_INPUT = 2,
-    ERR_FOPEN = 3,
-    ERR_RLINE = 4,
-    ERR_CALLO = 5,
-    ERR_CYCLE = 6,
-    ERR_CTYPE = 7,
-    OK_FILE   = 8,
-    OK_OCCURR = 9
+    OK_TREE     = 0,
+    ERR_FREAD   = 1,
+    ERR_INPUT   = 2,
+    ERR_FOPEN   = 3,
+    ERR_RLINE   = 4,
+    ERR_CALLO   = 5,
+    ERR_CYCLE   = 6,
+    ERR_CTYPE   = 7,
+    OK_FILE     = 8,
+    OK_OCCURR   = 9,
+    VAR_FOUND   = 10,
+    VAR_N_FOUND = 11
 };
 
 struct File_t {
@@ -77,23 +78,26 @@ Errors_t Tree_Graph_Dump ( const struct Node_t *tree );
 void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump );
 void Tree_Text_Dump ( const struct Node_t *tree_node );
 
+double Eval_Body ( const struct Node_t *node, const int var_value );
+Errors_t Search_Var ( const struct Node_t *node );
 double Eval ( const struct Node_t *node );
 const char *Get_Op_Name ( int op_type );
 char *File_Skip_Spaces ( char *data, int file_size );
 Errors_t File_Reader ( struct File_t *File );
 int GetFileSize ( FILE * f );
 
-Node_t *d ( const struct Node_t *tree );
-Node_t *c ( const struct Node_t *tree );
+Node_t *Differentiation ( const struct Node_t *tree );
+Node_t *Copy_Node ( const struct Node_t *tree );
+int factorial ( size_t number );
 
-int Optimization_Const ( struct Node_t *tree );
-int Optimization_Option ( struct Node_t **tree );
-void Optimization ( struct Node_t *tree );
+int Optimization_Const  ( struct Node_t **tree_node );
+int Optimization_Option ( struct Node_t **tree_node );
+void Optimization ( struct Node_t *tree_node );
 
-Errors_t Diff_Tree_Ctor ( char *open_file, struct File_t *File, struct Tree_t *Tree );
-Errors_t Diff_Tree_Dtor ( struct File_t *File, struct Tree_t *Tree );
+Errors_t Diff_Tree_Ctor ( char *open_file, struct File_t *file, struct Tree_t *tree );
+Errors_t Diff_Tree_Dtor ( struct File_t *file, struct Tree_t *tree );
 Node_t *Create_Node ( Node_Type_t option, int value, struct Node_t *left, struct Node_t *right );
-void Node_Free ( struct Node_t **tree );
+void Node_Free ( struct Node_t **tree_node );
 
 void LatexOp ( Node_t* node, FILE* latex_file);
 void Print_Latex_Body ( Node_t* node, FILE* latex_file);
@@ -101,8 +105,7 @@ void Print_Latex ( Node_t* node, FILE* latex_file );
 void Brackets ( Node_t* node, FILE* latex_file, char bracket_type);
 void Brackets  ( Node_t* node, FILE* latex_file, char bracket_type);
 
-Node_t *Teilor_Body ( const struct Node_t *tree_node, const int number );
-int factorial ( const int number );
-Node_t *Teilor ( struct Node_t *tree_node, const int number );
+Node_t *Teylor_Body ( const struct Node_t *tree_node, const int number, const int var_val );
+Node_t *Teylor ( const struct Node_t *tree_node, const int number );
 
 #endif  // FRONT_END

@@ -1,15 +1,4 @@
 digraph G { 
 node [shape = record];
- "00AD0CF0"  "00AD0CF0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "sin "];
-
- "00AD0CF0" -> "00AD0CD8" 
- "00AD0CD8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "+ "];
-"00AD0CD8" -> "00AD0CA8" 
- "00AD0CD8" -> "00AD0CC0" 
- "00AD0CA8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "* "];
-"00AD0CA8" -> "00AD0C78" 
- "00AD0CA8" -> "00AD0C90" 
- "00AD0C78" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "2 "];
- "00AD0C90" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "x "];
- "00AD0CC0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "1 "];
+ "00BD81E8"  "00BD81E8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "1 "];
 }

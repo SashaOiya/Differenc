@@ -1,30 +1,39 @@
 #include "recurs_des.h"
 #include "front.h"
 
+// double or int
+
 int main ( int argc, char *argv[] )
 {
-    struct Tree_t Tree = {};
-    struct File_t File = {};
+    struct Tree_t tree = {};
+    struct File_t file = {};
 
-    Diff_Tree_Ctor ( argv[1], &File, &Tree );
+    Diff_Tree_Ctor ( argv[1], &file, &tree );
 
-    Tree_Graph_Dump ( Tree.start );
-    Tree_Text_Dump ( Tree.start );
+    Tree_Graph_Dump ( tree.start_node );
+    Tree_Text_Dump ( tree.start_node );
 
-    FILE* latex_file = fopen ( "eval.txt", "w" );
+    //FILE* latex_file = fopen ( "eval.txt", "w" );
    // Print_Latex ( Tree.start, latex_file);
 
-    Node_t *tree_c = d ( Tree.start );  // Tree_c  d == death!!!!!!
+    //Node_t *tree_c = d ( Tree.start );  // Tree_c  d == death!!!!!!
 
     //Tree_Graph_Dump ( tree_c );
-    Tree_Text_Dump ( tree_c );
+    //Tree_Text_Dump ( tree_c );
 
-    //Node_t *tailor_node = Teilor ( c( Tree.start ), 3 );  // taylor? c??!!?!?!??!?
+    /*if ( Search_Var ( Tree.start ) == VAR_FOUND ) {
+        printf ( "YES" );
+    } */
 
-    //Tree_Graph_Dump ( tailor_node );
+    struct Tree_t taylor_tree = {};
+    taylor_tree.start_node = Teylor ( tree.start_node, 3 );
 
-    fclose ( latex_file );
-    Diff_Tree_Dtor ( &File, &Tree );
+    Tree_Graph_Dump ( taylor_tree.start_node );
+
+    //fclose ( latex_file );
+
+    Node_Free ( &(taylor_tree.start_node) );
+    Diff_Tree_Dtor ( &file, &tree );
 
     return 0;
 }
@@ -141,10 +150,8 @@ void Tree_Text_Dump ( const struct Node_t *tree_node ) // +
 
 }
 
-Errors_t Tree_Graph_Dump ( const struct Node_t *tree )
+Errors_t Tree_Graph_Dump ( const struct Node_t *tree ) // +
 {
-    static int file_count = 0;
-
     FILE *tree_dump = fopen ( "tree.dot", "w" );
     if ( !tree_dump ) {
         perror ( "File opening failed" );
@@ -161,11 +168,12 @@ Errors_t Tree_Graph_Dump ( const struct Node_t *tree )
     fprintf ( tree_dump, "}\n" );
     fclose ( tree_dump );
 
-    const int SIZE = 100; // ??
-    char name[SIZE] = {}; // name??? cmd
-    fprintf( log(), "<img src=\"tree%d.png\" alt=\"-\" width=\"500\" height=\"600\">\n", file_count);
-    sprintf( name, "dot -T png tree.dot -o logs/tree%d.png", file_count++ );
-    system ( name );
+    static int file_counter = 0;
+    const int DUMP_COUNTER = 100;
+    char command_buffer[DUMP_COUNTER] = {};
+    fprintf( log(), "<img src=\"tree%d.png\" alt=\"-\" width=\"500\" height=\"600\">\n", file_counter );
+    sprintf( command_buffer, "dot -T png tree.dot -o logs/tree%d.png", file_counter++ );
+    system ( command_buffer );
 
     return OK_TREE;
 }
@@ -199,7 +207,45 @@ void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump ) // -
     Tree_Dump_Body ( tree->right, tree_dump );
 }
 
-double Eval ( const struct Node_t *node ) // - add var
+double Eval ( const struct Node_t *node )
+{
+    if ( node == nullptr ) {
+
+        return 0;
+    }
+    int var_value = 0;
+
+    if ( Search_Var ( node ) == VAR_FOUND ) {
+        printf ( "\nPlease, enter the value of the variable\n" );
+        scanf ( "%d", &var_value );  // scanf_s
+    }
+
+    return Eval_Body ( node, var_value );
+}
+
+Errors_t Search_Var ( const struct Node_t *node )
+{
+    if ( node == nullptr ) {
+
+        return VAR_N_FOUND;
+    }
+    if ( node->type == NODE_TYPE_VAR ) {
+
+        return VAR_FOUND;
+    }
+    Errors_t left_node_res  = Search_Var ( node->left  );
+    Errors_t right_node_res = Search_Var ( node->right );
+
+    if ( left_node_res == VAR_FOUND ||
+         right_node_res == VAR_FOUND ) {
+
+        return VAR_FOUND;
+    }
+
+    return VAR_N_FOUND;
+}
+
+double Eval_Body ( const struct Node_t *node, const int var_value ) // - add var
 {
     if ( node == nullptr ) {
 
@@ -210,13 +256,12 @@ double Eval ( const struct Node_t *node ) // - add var
         return node->value;
     }
     else if ( node->type == NODE_TYPE_VAR ) {  // if calc expression with variables (e.g. x = 1)
-        printf ( "Error, because i dont't know this value\n" );
 
-        return 0;
+        return var_value;
     }
 
-    double left  = Eval ( node->left );
-    double right = Eval ( node->right );
+    double left  = Eval_Body ( node->left,  var_value );
+    double right = Eval_Body ( node->right, var_value );
 
     if ( node->type == NODE_TYPE_OP ) {
         switch ( node->value ) {
@@ -271,10 +316,11 @@ double Eval ( const struct Node_t *node ) // - add var
     return ERR_CTYPE;
 }
 
-Node_t *d ( const struct Node_t *tree )  // -    // node
+Node_t *Differentiation ( const struct Node_t *tree )  // -    // node
 {
     // allocator оцени
     // calloc blockami
+    // code generation
 
     if ( tree == nullptr ) {
 
@@ -291,68 +337,68 @@ Node_t *d ( const struct Node_t *tree )  // -    // node
     else if ( tree->type == NODE_TYPE_OP ){
         switch ( tree->value ) {
             case OP_ADD : {
-                Node_t *tree_c = Create_Node ( NODE_TYPE_OP, OP_ADD, d ( tree->left ), d ( tree->right ) );
+                Node_t *tree_c = Create_Node ( NODE_TYPE_OP, OP_ADD, Differentiation ( tree->left ), Differentiation ( tree->right ) );
                 Optimization ( tree_c );
 
                 return tree_c;
                 break;
             }
             case OP_SUB : {
-                Node_t *tree_c = Create_Node ( NODE_TYPE_OP, OP_SUB, d ( tree->left ), d ( tree->right ) );
+                Node_t *tree_c = Create_Node ( NODE_TYPE_OP, OP_SUB, Differentiation ( tree->left ), Differentiation ( tree->right ) );
                 Optimization ( tree_c );
 
                 return tree_c;
                 break;
             }
             case OP_MUL : {
-                Node_t *tree_c = Create_Node ( NODE_TYPE_OP, OP_ADD, Create_Node ( NODE_TYPE_OP, OP_MUL, d ( tree->left ), c ( tree->right ) ),
-                                                                     Create_Node ( NODE_TYPE_OP, OP_MUL, c ( tree->left ), d ( tree->right ) ) );
+                Node_t *tree_c = Create_Node ( NODE_TYPE_OP, OP_ADD, Create_Node ( NODE_TYPE_OP, OP_MUL, Differentiation ( tree->left ), Copy_Node ( tree->right ) ),
+                                                                     Create_Node ( NODE_TYPE_OP, OP_MUL, Copy_Node ( tree->left ), Differentiation ( tree->right ) ) );
                 Optimization ( tree_c );
 
                 return tree_c;
                 break;
             }
             case OP_DIV : {
-                Node_t *tree_c = Create_Node ( NODE_TYPE_OP, OP_DIV, Create_Node ( NODE_TYPE_OP, OP_SUB, Create_Node ( NODE_TYPE_OP, OP_MUL, d ( tree->left ), c ( tree->right ) ),
-                                                                                                         Create_Node ( NODE_TYPE_OP, OP_MUL, c ( tree->left ), d ( tree->right ) ) ),
-                                                                     Create_Node ( NODE_TYPE_OP, OP_MUL, c ( tree->right ), c ( tree->right ) ) );
+                Node_t *tree_c = Create_Node ( NODE_TYPE_OP, OP_DIV, Create_Node ( NODE_TYPE_OP, OP_SUB, Create_Node ( NODE_TYPE_OP, OP_MUL, Differentiation ( tree->left ), Copy_Node ( tree->right ) ),
+                                                                                                         Create_Node ( NODE_TYPE_OP, OP_MUL, Copy_Node ( tree->left ), Differentiation ( tree->right ) ) ),
+                                                                     Create_Node ( NODE_TYPE_OP, OP_MUL, Copy_Node ( tree->right ), Copy_Node ( tree->right ) ) );
                 Optimization ( tree_c );
 
                 return tree_c;
                 break;
             }
             case OP_SIN : {
-                Node_t *tree_c = c ( tree );
+                Node_t *tree_c = Copy_Node ( tree );
                 tree_c->value = OP_COS;
-                tree_c = Create_Node ( NODE_TYPE_OP, OP_MUL, tree_c, d ( tree->right) );
+                tree_c = Create_Node ( NODE_TYPE_OP, OP_MUL, tree_c, Differentiation ( tree->right) );
                 return tree_c;
                 break;
             }
             case OP_COS : {
-                Node_t *tree_c = c ( tree );
+                Node_t *tree_c = Copy_Node ( tree );
                 tree_c->value = OP_SIN;
-                tree_c = Create_Node ( NODE_TYPE_OP, OP_MUL, tree_c, d ( tree->right) );
+                tree_c = Create_Node ( NODE_TYPE_OP, OP_MUL, tree_c, Differentiation ( tree->right) );
                 tree_c = Create_Node ( NODE_TYPE_OP, OP_MUL, Create_Node ( NODE_TYPE_NUM, -1, nullptr, nullptr ), tree_c );
 
                 return tree_c;
                 break;
             }
             case OP_TG  : {
-                Node_t *tree_c = c ( tree );
+                Node_t *tree_c = Copy_Node ( tree );
                 tree_c->value = OP_COS;
                 tree_c = Create_Node ( NODE_TYPE_OP, OP_MUL, tree_c, tree_c );
                 tree_c = Create_Node ( NODE_TYPE_OP, OP_DIV, Create_Node ( NODE_TYPE_NUM, 1, nullptr, nullptr ), tree_c );
-                tree_c = Create_Node ( NODE_TYPE_OP, OP_MUL, tree_c, d ( tree->right ) );
+                tree_c = Create_Node ( NODE_TYPE_OP, OP_MUL, tree_c, Differentiation ( tree->right ) );
 
                 return tree_c;
                 break;
             }
             case OP_CTG  : {
-                Node_t *tree_c = c ( tree );
+                Node_t *tree_c = Copy_Node ( tree );
                 tree_c->value = OP_SIN;
                 tree_c = Create_Node ( NODE_TYPE_OP, OP_MUL, tree_c, tree_c );
                 tree_c = Create_Node ( NODE_TYPE_OP, OP_DIV, Create_Node ( NODE_TYPE_NUM, -1, nullptr, nullptr ), tree_c );
-                tree_c = Create_Node ( NODE_TYPE_OP, OP_MUL, tree_c, d ( tree->right ) );
+                tree_c = Create_Node ( NODE_TYPE_OP, OP_MUL, tree_c, Differentiation ( tree->right ) );
 
                 return tree_c;
                 break;
@@ -365,7 +411,7 @@ Node_t *d ( const struct Node_t *tree )  // -    // node
     return nullptr;
 }
 
-Node_t *c ( const struct Node_t *tree )  // -     // NAMES!!! AAA!
+Node_t *Copy_Node ( const struct Node_t *tree )
 {
     if ( tree == nullptr ) {
 
@@ -375,52 +421,52 @@ Node_t *c ( const struct Node_t *tree )  // -     // NAMES!!! AAA!
     return Create_Node ( tree->type, tree->value, tree->left, tree->right );
 }
 
-int Optimization_Const ( struct Node_t *tree ) // -      // **
+int Optimization_Const  ( struct Node_t **tree_node ) // -      // **
 {
-    if ( tree == nullptr || tree->right == nullptr || tree->left == nullptr ) {
+    if ( *tree_node == nullptr || (*tree_node)->right == nullptr || (*tree_node)->left == nullptr ) {
 $
         return 0;
     }
-$   if ( tree->left->type  == NODE_TYPE_NUM &&
-         tree->right->type == NODE_TYPE_NUM  ) {
+$   if ( (*tree_node)->left->type  == NODE_TYPE_NUM &&
+         (*tree_node)->right->type == NODE_TYPE_NUM  ) {
 
-$       tree->value = (int)Eval ( tree );
-$       tree->type = NODE_TYPE_NUM;
-$       Node_Free ( &(tree->left  ) );
-$       Node_Free ( &(tree->right ) );
+$       (*tree_node)->value = (int)Eval_Body ( *tree_node, 0 );
+$       (*tree_node)->type = NODE_TYPE_NUM;
+$       Node_Free ( &((*tree_node)->left  ) );
+$       Node_Free ( &((*tree_node)->right ) );
 
         return OK_OCCURR;
     }
     else {
-        return ( Optimization_Const ( tree->left ) ||
-                 Optimization_Const ( tree->right ) );
+        return ( Optimization_Const ( &((*tree_node)->left) ) ||
+                 Optimization_Const ( &((*tree_node)->right ) ) );
     }
 }
 
-int Optimization_Option ( struct Node_t **tree )  // +-
+int Optimization_Option ( struct Node_t **tree_node )  // +-
 {
-$   if ( (*tree) == nullptr  ) {
+$   if ( *tree_node == nullptr  ) {
 
         return 0;
     }
-$   if ( (*tree)->type == NODE_TYPE_OP && (*tree)->value == OP_MUL ) {
-        if ( (*tree)->left->value  == 0 || (*tree)->right->value == 0 ) {
-$           (*tree)->value = 0;
-$           (*tree)->type  = NODE_TYPE_NUM;
-$           Node_Free ( &((*tree)->left ) );
-$           Node_Free ( &((*tree)->right ) );
+$   if ( (*tree_node)->type == NODE_TYPE_OP && (*tree_node)->value == OP_MUL ) {
+        if ( (*tree_node)->left->value  == 0 || (*tree_node)->right->value == 0 ) {
+$           (*tree_node)->value = 0;
+$           (*tree_node)->type  = NODE_TYPE_NUM;
+$           Node_Free ( &((*tree_node)->left ) );
+$           Node_Free ( &((*tree_node)->right ) );
 
             return OK_OCCURR;
         }
-        if ( (*tree)->left->value  == 1 ) {  // func
-            Node_Free ( &((*tree)->left ) );
-            (*tree) = (*tree)->right;
+        if ( (*tree_node)->left->value  == 1 ) {  // func
+            Node_Free ( &((*tree_node)->left ) );
+            (*tree_node) = (*tree_node)->right;
 
             return OK_OCCURR;
         }
-        else if ( (*tree)->right->value == 1 ) {
-            Node_Free ( &((*tree)->right ) );
-            *tree = (*tree)->left; // for this moment
+        else if ( (*tree_node)->right->value == 1 ) {
+            Node_Free ( &((*tree_node)->right ) );
+            *tree_node = (*tree_node)->left; // for this moment
 
             return OK_OCCURR;
         }
@@ -428,62 +474,48 @@ $
         return 0;
     }
     else {
-       return ( Optimization_Option ( &(*tree)->left ) ||
-                Optimization_Option ( &(*tree)->right )  );
+       return ( Optimization_Option ( &(*tree_node)->left ) ||
+                Optimization_Option ( &(*tree_node)->right )  );
     }
 }
 
-void Optimization ( struct Node_t *tree )  // +
+void Optimization ( struct Node_t *tree_node )
 {
-
-    while ( Optimization_Const  ( tree) ||
-            Optimization_Option ( &tree ) );
-    /*int occurrences_n = 0;
-    int prev_occuttences_n = 0;
-
-    do {
-        prev_occuttences_n = occurrences_n;
-        if ( Optimization_Const  ( tree) ||
-             Optimization_Option ( &tree ) ) {
-            ++occurrences_n;
-            //Tree_Text_Dump ( tree );
-        }
-    } while ( prev_occuttences_n != occurrences_n );  */
+    while ( Optimization_Const  ( &tree_node ) || Optimization_Option ( &tree_node ) );
 }
 
-void Node_Free ( struct Node_t **tree ) // +
+void Node_Free ( struct Node_t **tree_node ) // +
 {
-    //assert ( tree );
-    if ( *tree != nullptr ) {
-        Node_Free ( &((*tree)->left) );
-        Node_Free ( &((*tree)->right));
+    if ( tree_node != nullptr && *tree_node != nullptr ) {
+        Node_Free ( &((*tree_node)->left) );
+        Node_Free ( &((*tree_node)->right));
 
-        (*tree)->left = nullptr;
-        (*tree)->right = nullptr;
+        (*tree_node)->left = nullptr;
+        (*tree_node)->right = nullptr;
 
-        *tree = nullptr;
+        *tree_node = nullptr;
     }
 }
 
-Errors_t Diff_Tree_Ctor ( char *open_file, struct File_t *File, struct Tree_t *Tree ) // +
+Errors_t Diff_Tree_Ctor ( char *open_file, struct File_t *file, struct Tree_t *tree ) // +
 {
-    File->file_name = open_file;
-    Errors_t error_name = File_Reader ( File );
+    file->file_name = open_file;
+    Errors_t error_name = File_Reader ( file );
     if ( error_name != OK_FILE ) {
 
         return ERR_FREAD;
     }
-    File->out_buffer = File_Skip_Spaces ( File->out_buffer, File->file_size );
-    Tree->start = Get_General ( File->out_buffer, Tree->start );
+    file->out_buffer = File_Skip_Spaces ( file->out_buffer, file->file_size );
+    tree->start_node = Get_General ( file->out_buffer, tree->start_node );
 
     return OK_FILE;
 }
 
-Errors_t Diff_Tree_Dtor ( struct File_t *File, struct Tree_t *Tree )
+Errors_t Diff_Tree_Dtor ( struct File_t *file, struct Tree_t *tree )
 {
-    Node_Free ( &(Tree->start) );
-    free ( File->out_buffer );
-    fclose ( File->front_f );
+    Node_Free ( &(tree->start_node) );
+    free ( file->out_buffer );
+    fclose ( file->front_f );
 }
 
 const char *Get_Op_Name ( int op_type )
@@ -627,39 +659,55 @@ void Brackets ( Node_t* node, FILE* latex_file, char bracket_type)
     }
 }
 
-Node_t *Teilor ( struct Node_t *tree_node, const int number )
+Node_t *Teylor ( const struct Node_t *tree_node, const int number )
 {
-    struct Tree_t Tree_Tailor = {};
-    Tree_Tailor.start = Create_Node( NODE_TYPE_NUM, 0, nullptr, nullptr );
-    Node_t *tailor_node = tree_node; // copy
+    struct Tree_t tree_taylor = {};
+    tree_taylor.start_node = Create_Node( NODE_TYPE_NUM, 0, nullptr, nullptr );
+    Node_t *taylor_node = Copy_Node ( tree_node );
 
-    for ( int i = 0; i < number; ++i ) {
-        //Tree_Tailor.start = Create_Node ( OP, OP_ADD, Tree_Tailor.start, tailor_node );
-        Tree_Graph_Dump ( tailor_node );
-        tailor_node = Teilor_Body ( tailor_node, i+1 );
+    int var_value = 0;
+    if ( Search_Var ( tree_node ) == VAR_FOUND ) {
+        printf ( "\nEnter the value of the variable\n" );
+        scanf ( "%d", &var_value );  // scanf_s
     }
 
-    return Tree_Tailor.start;
+    for ( int i = 0; i <= number; ++i ) {
+        tree_taylor.start_node = Create_Node ( NODE_TYPE_OP, OP_ADD, tree_taylor.start_node,
+                                                                Teylor_Body ( taylor_node, i, var_value ) );
+    }
+    Tree_Graph_Dump ( tree_taylor.start_node );/////////
+    Optimization ( tree_taylor.start_node );
+
+    return tree_taylor.start_node;
 }
 
-Node_t *Teilor_Body ( const struct Node_t *tree_node, const int number ) // name
+Node_t *Teylor_Body ( const struct Node_t *tree_node, const int number, const int var_val ) // name
 {
-    Node_t *factorial_n = Create_Node ( NODE_TYPE_NUM, factorial ( number), nullptr, nullptr );    // nameeeee
     Node_t *x = Create_Node ( NODE_TYPE_VAR, OP_VAR, nullptr, nullptr );
     Node_t *pow_x = Create_Node ( NODE_TYPE_NUM, 1, nullptr, nullptr );  // nameeeeee
+    Node_t *dif_node = Copy_Node ( tree_node );
 
     for ( int i = 0; i < number; ++i ) {
         pow_x = Create_Node ( NODE_TYPE_OP, OP_MUL, x, pow_x );
+        dif_node = Differentiation ( dif_node );
     }
-    pow_x = Create_Node ( NODE_TYPE_OP, OP_DIV, pow_x, factorial_n );
-    pow_x = Create_Node ( NODE_TYPE_OP, OP_MUL, d( tree_node ), pow_x );
+    ////////
+    Tree_Text_Dump ( dif_node );
+    double eval_val = Eval_Body ( dif_node, var_val );
+    printf ( "\n%d\n", (int)eval_val );
+    //////
+    Node_t *node_val = Create_Node ( NODE_TYPE_NUM, (int)eval_val / factorial ( number ), nullptr, nullptr );
+    //////
+    printf ( "\n%g\n", ( eval_val / factorial ( number )) ); ///??????????????
+    //////
+    pow_x = Create_Node ( NODE_TYPE_OP, OP_MUL, node_val, pow_x );
 
     return pow_x;
 }
 
-int factorial ( unsigned number )
+int factorial ( size_t number )
 {
-    if ( number == 0 || number == 1 ) { // number <= 1
+    if ( number <= 1 ) {
 
         return 1;
     }
