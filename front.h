@@ -74,37 +74,35 @@ struct File_t {
     int file_size = 0;
 };
 
-Errors_t Tree_Graph_Dump ( const struct Node_t *tree );
-void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump );
-void Tree_Text_Dump ( const struct Node_t *tree_node );
+void        Tree_Dump_Body  ( const struct Node_t *tree, FILE *tree_dump );
+void        Tree_Text_Dump  ( const struct Node_t *tree_node );
+Errors_t    Tree_Graph_Dump ( const struct Node_t *tree );
+const char *Get_Op_Name     ( int op_type );
 
-double Eval_Body ( const struct Node_t *node, const int var_value );
+double   Eval       ( const struct Node_t *node );
+double   Eval_Body  ( const struct Node_t *node, const int var_value );
 Errors_t Search_Var ( const struct Node_t *node );
-double Eval ( const struct Node_t *node );
-const char *Get_Op_Name ( int op_type );
-char *File_Skip_Spaces ( char *data, int file_size );
-Errors_t File_Reader ( struct File_t *File );
-int GetFileSize ( FILE * f );
+
+char *   File_Skip_Spaces ( char *data, int file_size );
+Errors_t File_Reader      ( struct File_t *File );
+Errors_t Diff_Tree_Ctor   ( struct File_t *file, struct Tree_t *tree, char *open_file );
+void     Diff_Tree_Dtor   ( struct File_t *file, struct Tree_t *tree );
+
+int  Optimization_Const  ( struct Node_t **tree_node );
+int  Optimization_Option ( struct Node_t **tree_node );
+void Optimization        ( struct Node_t *tree_node );
+
+void    Node_Free   ( struct Node_t **tree_node );
+Node_t *Copy_Node   ( const struct Node_t *tree );
+Node_t *Create_Node ( Node_Type_t option, int value, struct Node_t *left, struct Node_t *right );
+
+void Latex_Op         ( Node_t* node, FILE* latex_file);
+void Put_Op           ( Node_t* node, FILE* latex_file);
+void Print_Latex_Body ( Node_t* node, FILE* latex_file);
+void Print_Latex      ( Node_t* node, FILE* latex_file );
+void Put_Brackets     ( Node_t* node, FILE* latex_file, char bracket_type);
 
 Node_t *Differentiation ( const struct Node_t *tree );
-Node_t *Copy_Node ( const struct Node_t *tree );
-int factorial ( size_t number );
-
-int Optimization_Const  ( struct Node_t **tree_node );
-int Optimization_Option ( struct Node_t **tree_node );
-void Optimization ( struct Node_t *tree_node );
-
-Errors_t Diff_Tree_Ctor ( char *open_file, struct File_t *file, struct Tree_t *tree );
-Errors_t Diff_Tree_Dtor ( struct File_t *file, struct Tree_t *tree );
-Node_t *Create_Node ( Node_Type_t option, int value, struct Node_t *left, struct Node_t *right );
-void Node_Free ( struct Node_t **tree_node );
-
-void LatexOp ( Node_t* node, FILE* latex_file);
-void Print_Latex_Body ( Node_t* node, FILE* latex_file);
-void Print_Latex ( Node_t* node, FILE* latex_file );
-void Brackets ( Node_t* node, FILE* latex_file, char bracket_type);
-void Brackets  ( Node_t* node, FILE* latex_file, char bracket_type);
-
 Node_t *Teylor_Body ( const struct Node_t *tree_node, const int number, const int var_val );
 Node_t *Teylor ( const struct Node_t *tree_node, const int number );
 

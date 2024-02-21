@@ -1,1 +1,1 @@
-cos(x)
+x+x*x+x*x*x

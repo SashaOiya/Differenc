@@ -1,5 +1,4 @@
 #include "recurs_des.h"
-// Change them all (names)
 
 Node_t *Get_General ( char *buffer, struct Node_t *tree_node )
 {
@@ -16,8 +15,7 @@ Node_t *Get_Number ( struct Position_t *position )
     int value = 0;
     int prev_index = position->index;
 
-    // strtod???
-    while ( isdigit ( position->data[position->index] ) ) {
+    while ( isdigit ( position->data[position->index] ) ) {    // strtod
         value = value * 10 + position->data[position->index] - '0';
         ++(position->index);
     }
@@ -63,33 +61,32 @@ Node_t *Get_Index ( struct Position_t *position )
     return Create_Node ( NODE_TYPE_VAR, OP_VAR, nullptr, nullptr );
 }
 
+int Get_Binary_Element ( int sign, enum Mode_t mode )
+{
+    if ( mode == MODE_ADD_SUB && ( sign == '+' || sign == '-' ) ) {
+
+        return sign;
+    }
+    else if ( mode == MODE_MUL_DIV && ( sign == '*' || sign == '/' ) ) {
+
+        return sign;
+    }
+
+    return 0;
+}
+
 Node_t *Get_Expression ( struct Position_t *position )
 {
     Node_t *term_node = Get_Term ( position );
 
-    // В одном месте проверки на + -
-    while ( position->data[position->index] == '+' ||
-            position->data[position->index] == '-' )
-    {
-        int element = position->data[position->index];
+    int element = 0;
+    while ( element = Get_Binary_Element ( position->data[position->index], MODE_ADD_SUB ) ) {
         (position->index)++;
         Node_t *term_node_right = Get_Term ( position );
 
-        switch ( element ) {
-            case '+' : {
-                term_node = Create_Node( NODE_TYPE_OP, OP_ADD, term_node, term_node_right );
-                break;
-            }
-            case '-' : {
-                term_node = Create_Node( NODE_TYPE_OP, OP_SUB, term_node, term_node_right );
-                break;
-            }
-            default : {
-                printf ( "Error" );
-                break;
-            }
-        }
+        term_node = Create_Node( NODE_TYPE_OP, element, term_node, term_node_right );
     }
+
     return term_node;
 }
 
@@ -97,28 +94,14 @@ Node_t *Get_Term ( struct Position_t *position )
 {
     Node_t *part_node = Get_Partititon ( position );
 
-    while ( position->data[position->index] == '*' ||
-            position->data[position->index] == '/' ) {
-        char element = position->data[position->index];
+    int element = 0;  // char
+    while ( element = Get_Binary_Element ( position->data[position->index], MODE_MUL_DIV ) ) {
         (position->index)++;
-
         Node_t *part_node_right = Get_Partititon ( position );
 
-        switch ( element ) {
-            case '*' : {
-                part_node = Create_Node( NODE_TYPE_OP, OP_MUL, part_node, part_node_right );
-                break;
-            }
-            case '/' : {
-                part_node = Create_Node( NODE_TYPE_OP, OP_DIV, part_node, part_node_right );
-                break;
-            }
-            default : {
-                printf ( "Error" );    // more information
-                break;
-            }
-        }
+        part_node = Create_Node( NODE_TYPE_OP, element, part_node, part_node_right );
     }
+
     return part_node;
 }
 
@@ -142,6 +125,3 @@ Node_t *Get_Partititon ( struct Position_t *position )
         return Get_Number ( position );
     }
 }
-
-
-

@@ -1,4 +1,36 @@
 digraph G { 
 node [shape = record];
- "00BD81E8"  "00BD81E8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "1 "];
+ "006CA688"  "006CA688" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "+ "];
+"006CA688" -> "006C9E78" 
+ "006CA688" -> "006CA568" 
+ "006C9E78" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "+ "];
+"006C9E78" -> "006C9740" 
+ "006C9E78" -> "006CA0B8" 
+ "006C9740" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "+ "];
+"006C9740" -> "006C1C18" 
+ "006C9740" -> "006C1B10" 
+ "006C1C18" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "0 "];
+ "006C1B10" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "x "];
+ "006CA0B8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "* "];
+"006CA0B8" -> "006C9800" 
+ "006CA0B8" -> "006C98D8" 
+ "006C9800" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "x "];
+ "006C98D8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "* "];
+"006C98D8" -> "006C9800" 
+ "006C98D8" -> "006C98C0" 
+ "006C9800" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "x "];
+ "006C98C0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "1 "];
+ "006CA568" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "* "];
+"006CA568" -> "006C9E90" 
+ "006CA568" -> "006CA430" 
+ "006C9E90" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "x "];
+ "006CA430" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "* "];
+"006CA430" -> "006C9E90" 
+ "006CA430" -> "006CA1C0" 
+ "006C9E90" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "x "];
+ "006CA1C0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "* "];
+"006CA1C0" -> "006C9E90" 
+ "006CA1C0" -> "006C9F50" 
+ "006C9E90" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "x "];
+ "006C9F50" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "1 "];
 }
