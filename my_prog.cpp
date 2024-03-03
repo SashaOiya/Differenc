@@ -37,3 +37,50 @@ int Get_File_Size ( FILE * f )
 
     return size_not_blue;
 }
+
+Prog_Mode_t interface_input ( )
+{
+    const int max_buf_value = 100;
+    char buf[max_buf_value] = {};
+
+    print_color ( "Select mode\n", COLOR_BLUE );
+    scanf ( "%s", buf );
+    getchar ( );
+
+    if ( strcmp( buf, "help" ) == 0 ) {
+
+        print_color ( "Here is a list of supported features :"
+                      "\n\n  help  \n\n  bye  \n\n  difference  \n\n \n\n taylot \n\n g_dump \n\n"
+                                                                               " \n\n t_dump \n\n", COLOR_BLUE );
+
+        return MODE_HELP;
+    }
+    else if ( strcmp ( buf, "bye" ) == 0 ) {
+
+        return MODE_BYE;
+    }
+    else if ( strcmp ( buf, "difference" ) == 0 ) {
+
+        return MODE_DIF;
+    }
+    else if ( strcmp ( buf, "taylor" ) == 0 ) {
+
+        return MODE_TAYLOR;
+    }
+    else if ( strcmp ( buf, "g_dump" ) == 0 ) {
+
+        return MODE_G_DUMP;
+    }
+    else if ( strcmp ( buf, "t_dump" ) == 0 ) {
+
+        return MODE_T_DUMP;
+    }
+    else {
+
+        print_color ( "This option was not found. Use the list of presented functions:\n", COLOR_RED );
+
+        return MODE_ERROR;
+    }
+
+    return MODE_ERROR;
+}

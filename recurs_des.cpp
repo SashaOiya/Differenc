@@ -84,7 +84,7 @@ Node_t *Get_Expression ( struct Position_t *position )
         (position->index)++;
         Node_t *term_node_right = Get_Term ( position );
 
-        term_node = Create_Node( NODE_TYPE_OP, element, term_node, term_node_right );
+        term_node = Create_Node ( NODE_TYPE_OP, element, term_node, term_node_right );
     }
 
     return term_node;

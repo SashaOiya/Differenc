@@ -2,35 +2,61 @@
 #include "front.h"
 #include "my_prog.h"
 
+static const int DUMP_COUNTER = 100;
+
 // double or int
 // $$$$
-
-int main ( int argc, char *argv[] )
+//FIXME assert
+int main ( int argc, char *argv[] ) //FIXME: add const
 {
     struct Tree_t tree = {};
     struct File_t file = {};
 
     Diff_Tree_Ctor ( &file, &tree, argv[1] );
 
-    Tree_Graph_Dump ( tree.start_node );
-    Tree_Text_Dump ( tree.start_node );
+    //FIXME: fuck me
+    Prog_Mode_t dif_mode = MODE_ERROR;
+    do {
+        Node_t *tree_c = tree.start_node;
+        dif_mode = interface_input ( );
+
+        if ( dif_mode == MODE_BYE  ) {
+
+            return 0;
+        }
+        else if ( dif_mode == MODE_DIF ) {
+            tree_c = Differentiation ( tree.start_node ); // tree_c
+            Node_Free ( &tree_c );
+        }
+        else if ( dif_mode == MODE_TAYLOR ) {
+            tree_c = Taylor ( tree.start_node, 4 );
+            Node_Free ( &tree_c );
+        }
+        else if ( dif_mode == MODE_G_DUMP ) {
+            Tree_Graph_Dump ( tree_c );
+        }
+        else if ( dif_mode == MODE_G_DUMP ) {
+            Tree_Text_Dump ( tree_c );
+        }
+        //Node_Free ( &tree_c );
+    } while ( dif_mode != MODE_BYE );
+    /*Node_t *tree_c = Differentiation ( tree.start_node );  //
+
+    Tree_Graph_Dump ( tree_c );
+    Tree_Text_Dump ( tree_c );    */
+
+    /*struct Tree_t taylor_tree = {};
+    taylor_tree.start_node = Taylor ( tree.start_node, 4 );
+
+    Tree_Graph_Dump ( taylor_tree.start_node ); */
+    //Node_Free ( &(taylor_tree.start_node) );
 
     FILE* latex_file = fopen ( "latex.txt", "w" );
-    Print_Latex ( tree.start_node, latex_file );
-
-    //Node_t *tree_c = Differentiation ( tree.start_node );  //
-
-    //Tree_Graph_Dump ( tree_c );
-    //Tree_Text_Dump ( tree_c );
-
-    struct Tree_t taylor_tree = {};
-    taylor_tree.start_node = Teylor ( tree.start_node, 3 );
-
-    Tree_Graph_Dump ( taylor_tree.start_node );
-
-    Node_Free ( &(taylor_tree.start_node) );
+    if ( !latex_file ) {
+        Print_Latex ( tree.start_node, latex_file );
+        fclose ( latex_file );
+    }
     Diff_Tree_Dtor ( &file, &tree );
-    fclose ( latex_file );
 
     return 0;
 }
@@ -78,12 +104,13 @@ Node_t *Create_Node ( Node_Type_t option, int value, struct Node_t *left, struct
 {
     struct Node_t *tree_c = ( Node_t *)calloc ( 1, sizeof ( Node_t ) );
     if ( !tree_c ) {
-        free ( tree_c );
+
+        return nullptr;
     }
     tree_c->type = option;
     tree_c->value = value;
-    tree_c->left = left;
-    tree_c->right = right;
+    tree_c->left = Copy_Node ( left );
+    tree_c->right = Copy_Node ( right );
 
     return tree_c;
 }
@@ -101,7 +128,7 @@ char *File_Skip_Spaces ( char *data, int file_size ) // +
     for ( ; *data != '\0'; ++data ) {
         while ( *data == ' '  ||
                 *data == '\t' ||
-                *data == '\n' ) {
+                *data == '\n' ) {  // FIXME isspace
 
             ++data;
         }
@@ -155,7 +182,6 @@ Errors_t Tree_Graph_Dump ( const struct Node_t *tree ) // +
     fclose ( tree_dump );
 
     static int file_counter = 0;
-    const int DUMP_COUNTER = 100;
     char command_buffer[DUMP_COUNTER] = {};
     fprintf( log(), "<img src=\"tree%d.png\" alt=\"-\" width=\"500\" height=\"600\">\n", file_counter );
     sprintf( command_buffer, "dot -T png tree.dot -o logs/tree%d.png", file_counter++ );
@@ -211,14 +237,14 @@ double Eval ( const struct Node_t *node ) // + scanf_s
 
 Errors_t Search_Var ( const struct Node_t *node )  // +
 {
-    if ( node == nullptr ) {
-
+    if ( node == nullptr ) { // FIXME
         return VAR_N_FOUND;
     }
-    if ( node->type == NODE_TYPE_VAR ) {
 
+    if ( node->type == NODE_TYPE_VAR ) {
         return VAR_FOUND;
     }
+
     Errors_t left_node_res  = Search_Var ( node->left  );
     Errors_t right_node_res = Search_Var ( node->right );
 
@@ -304,7 +330,7 @@ double Eval_Body ( const struct Node_t *node, const int var_value ) // - double 
 
 Node_t *Differentiation ( const struct Node_t *tree )  // -    // node
 {
-    // allocator оцени
+    // allocator пїЅпїЅпїЅпїЅпїЅ
     // calloc blockami
     // code generation
 
@@ -329,6 +355,7 @@ Node_t *Differentiation ( const struct Node_t *tree )  // -    // node
                 return tree_c;
                 break;
             }
+    // Create_op ( ADD, d(a), d(b) ) ...
             case OP_SUB : {
                 Node_t *tree_c = Create_Node ( NODE_TYPE_OP, OP_SUB, Differentiation ( tree->left ), Differentiation ( tree->right ) );
                 Optimization ( tree_c );
@@ -397,14 +424,25 @@ Node_t *Differentiation ( const struct Node_t *tree )  // -    // node
     return nullptr;
 }
 
-Node_t *Copy_Node ( const struct Node_t *tree )  // +
+//Node_t *Copy_Node ( const struct Node_t *tree )  // +
+//{
+//    if ( tree == nullptr ) {
+//
+//        return nullptr;
+//
+//
+//    return Create_Node ( tree->type, tree->value, tree->left, tree->right );
+//}
+Node_t *Copy_Node ( const struct Node_t *tree)
 {
-    if ( tree == nullptr ) {
-
-        return nullptr;
-    }
-
-    return Create_Node ( tree->type, tree->value, tree->left, tree->right );
+    if (tree == nullptr) return nullptr;
+    Node_t* new_tree = (Node_t*)calloc(1, sizeof(Node_t));
+    //*new_tree = {tree->type, tree->value, Copy_Node(tree->left), Copy_Node(tree->right)};
+    new_tree->type = tree->type;
+    new_tree->value = tree->value;
+    new_tree->left = Copy_Node(tree->left);
+    new_tree->right = Copy_Node(tree->right);
+    return new_tree;
 }
 
 int Optimization_Const  ( struct Node_t **tree_node ) // +     // **
@@ -459,6 +497,7 @@ $           Node_Free ( &((*tree_node)->right ) );
 $
         return 0;
     }
+    // +0 -0
     else {
        return ( Optimization_Option ( &(*tree_node)->left ) ||
                 Optimization_Option ( &(*tree_node)->right )  );
@@ -535,7 +574,7 @@ void Print_Latex ( Node_t* node, FILE* latex_file )  // stack
     fprintf ( latex_file, "\\]" );
 }
 
-void Print_Latex_Body ( Node_t* node, FILE* latex_file)
+void Print_Latex_Body ( Node_t* node, FILE* latex_file )
 {
     switch ( node->type )
     {
@@ -557,7 +596,7 @@ void Print_Latex_Body ( Node_t* node, FILE* latex_file)
     }
 }
 
-void Put_Op ( Node_t* node, FILE* latex_file)
+void Put_Op ( Node_t* node, FILE* latex_file )
 {
     if ( node->value == OP_DIV ) {
         fprintf ( latex_file, "}{" );
@@ -637,7 +676,7 @@ void Put_Brackets ( Node_t* node, FILE* latex_file, char bracket_type)
     }
 }
 
-Node_t *Teylor ( const struct Node_t *tree_node, const int number )
+Node_t *Taylor ( const struct Node_t *tree_node, const int number )
 {
     struct Tree_t tree_taylor = {};
     tree_taylor.start_node = Create_Node( NODE_TYPE_NUM, 0, nullptr, nullptr );
@@ -651,7 +690,7 @@ Node_t *Teylor ( const struct Node_t *tree_node, const int number )
 
     for ( int i = 0; i <= number; ++i ) {
         tree_taylor.start_node = Create_Node ( NODE_TYPE_OP, OP_ADD, tree_taylor.start_node,
-                                                                     Teylor_Body ( taylor_node, i, var_value ) );
+                                                                     Taylor_Body ( taylor_node, i, var_value ) );
     }
     Tree_Graph_Dump ( tree_taylor.start_node );/////////
     Optimization ( tree_taylor.start_node );
@@ -659,7 +698,7 @@ Node_t *Teylor ( const struct Node_t *tree_node, const int number )
     return tree_taylor.start_node;
 }
 
-Node_t *Teylor_Body ( const struct Node_t *tree_node, const int member_n, const int variable_val ) // name
+Node_t *Taylor_Body ( const struct Node_t *tree_node, const int member_n, const int variable_val ) // name
 {
     Node_t *var_node       = Create_Node ( NODE_TYPE_VAR, OP_VAR, nullptr, nullptr );
     Node_t *power_var_node = Create_Node ( NODE_TYPE_NUM, 1, nullptr, nullptr );  // nameeeeee

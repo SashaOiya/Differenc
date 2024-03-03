@@ -1,1 +1,1 @@
-g++ recurs_des.cpp front.cpp log.cpp my_prog.cpp
+g++ front.cpp my_prog.cpp log.cpp recurs_des.cpp

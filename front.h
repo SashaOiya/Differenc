@@ -40,7 +40,7 @@ enum Option_t {
 };
 
 struct Node_t {
-    int value        = 0;     // strange
+    int value        = 0;     // strange      // union
     Node_Type_t type;
     Node_t *left     = 0;
     Node_t *right    = 0;
@@ -103,7 +103,7 @@ void Print_Latex      ( Node_t* node, FILE* latex_file );
 void Put_Brackets     ( Node_t* node, FILE* latex_file, char bracket_type);
 
 Node_t *Differentiation ( const struct Node_t *tree );
-Node_t *Teylor_Body ( const struct Node_t *tree_node, const int number, const int var_val );
-Node_t *Teylor ( const struct Node_t *tree_node, const int number );
+Node_t *Taylor_Body ( const struct Node_t *tree_node, const int number, const int var_val );
+Node_t *Taylor ( const struct Node_t *tree_node, const int number );
 
 #endif  // FRONT_END
