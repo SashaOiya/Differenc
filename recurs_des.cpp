@@ -29,7 +29,7 @@ Node_t *Get_Index ( struct Position_t *position )
     char op_name[20] = {};
 
     for ( int counter = 0; isalpha ( position->data[position->index] ); (position->index)++, counter++ )  {
-        sprintf ( op_name + counter, "%c", position->data[position->index] );
+        op_name[counter] = position->data[position->index];
     }
 
     int unary_option = 0;
@@ -125,3 +125,18 @@ Node_t *Get_Partititon ( struct Position_t *position )
         return Get_Number ( position );
     }
 }
+
+Node_t *Get_Negative_Num ( struct Position_t *position )
+{
+    // assert
+
+    if ( position->data[position->index] == '-' ) {
+        Node_t *num_node = Get_Number ( position );
+        num_node->value= *= -1;
+
+        return num_node;
+    }
+
+    return Get_Number ( position );
+}
+
