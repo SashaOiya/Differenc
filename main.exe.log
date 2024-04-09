@@ -1,0 +1,1472 @@
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD1 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x32D4 (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD1 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:05:14, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:05:18
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD1 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x32D4 (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD1 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:05:14, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:05:18
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x2798 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:12:23, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:12:27
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x2798 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:12:23, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:12:27
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x3834 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:12:37, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:12:40
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x3834 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:12:37, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:12:40
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x25A4 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:13:19, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:13:22
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x25A4 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:13:19, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:13:22
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x3438 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:13:40, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:13:43
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x3438 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:13:40, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:13:43
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x928 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:14:28, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:14:31
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x928 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:14:28, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:14:31
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BD9C в функции File_Reader() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 82. Попытка записать данные по адресу 0x0000000C в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x494C (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BD9C in D:\Sasha's\program\ded\akinatorr\main.exe: File_Reader() at D:/Sasha's/program/ded/akinatorr/main.cpp (82):
+
+     80:     //int size = 100;
+     81: 
+=>   82:     (*tree)->error_ind = fscanf ( f, "%s", &word );
+     83:     //getdelim ( &word, &size, "\n", f );
+     84:     //getline  ();
+
+# 1 0x0042BCC9 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (54):
+
+     52:     FILE *tree_f = fopen ( "tree.txt", "r+" );
+     53: 
+=>   54:     if ( File_Reader ( tree_f, &tree.start ) == ERR_READ ) {
+     55: 
+     56:         return -1;
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:34:03, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:34:06
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BD9C в функции File_Reader() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 82. Попытка записать данные по адресу 0x0000000C в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x494C (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BD9C in D:\Sasha's\program\ded\akinatorr\main.exe: File_Reader() at D:/Sasha's/program/ded/akinatorr/main.cpp (82):
+
+     80:     //int size = 100;
+     81: 
+=>   82:     (*tree)->error_ind = fscanf ( f, "%s", &word );
+     83:     //getdelim ( &word, &size, "\n", f );
+     84:     //getline  ();
+
+# 1 0x0042BCC9 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (54):
+
+     52:     FILE *tree_f = fopen ( "tree.txt", "r+" );
+     53: 
+=>   54:     if ( File_Reader ( tree_f, &tree.start ) == ERR_READ ) {
+     55: 
+     56:         return -1;
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:34:03, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:34:06
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BD9C в функции File_Reader() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 82. Попытка записать данные по адресу 0x0000000C в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x49FC (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BD9C in D:\Sasha's\program\ded\akinatorr\main.exe: File_Reader() at D:/Sasha's/program/ded/akinatorr/main.cpp (82):
+
+     80:     //int size = 100;
+     81: 
+=>   82:     (*tree)->error_ind = fscanf ( f, "%s", &word );
+     83:     //getdelim ( &word, &size, "\n", f );
+     84:     //getline  ();
+
+# 1 0x0042BCC9 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (54):
+
+     52:     FILE *tree_f = fopen ( "tree.txt", "r+" );
+     53: 
+=>   54:     if ( File_Reader ( tree_f, &tree.start ) == ERR_READ ) {
+     55: 
+     56:         return 0;
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:34:45, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:34:48
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BD9C в функции File_Reader() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 82. Попытка записать данные по адресу 0x0000000C в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x49FC (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BD9C in D:\Sasha's\program\ded\akinatorr\main.exe: File_Reader() at D:/Sasha's/program/ded/akinatorr/main.cpp (82):
+
+     80:     //int size = 100;
+     81: 
+=>   82:     (*tree)->error_ind = fscanf ( f, "%s", &word );
+     83:     //getdelim ( &word, &size, "\n", f );
+     84:     //getline  ();
+
+# 1 0x0042BCC9 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (54):
+
+     52:     FILE *tree_f = fopen ( "tree.txt", "r+" );
+     53: 
+=>   54:     if ( File_Reader ( tree_f, &tree.start ) == ERR_READ ) {
+     55: 
+     56:         return 0;
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:34:45, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:34:48
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BD9C в функции File_Reader() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 82. Попытка записать данные по адресу 0x0000000C в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x3990 (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BD9C in D:\Sasha's\program\ded\akinatorr\main.exe: File_Reader() at D:/Sasha's/program/ded/akinatorr/main.cpp (82):
+
+     80:     //int size = 100;
+     81: 
+=>   82:     (*tree)->error_ind = fscanf ( f, "%s", &word );
+     83:     //getdelim ( &word, &size, "\n", f );
+     84:     //getline  ();
+
+# 1 0x0042BCC9 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (54):
+
+     52:     FILE *tree_f = fopen ( "tree.txt", "r+" );
+     53: 
+=>   54:     if ( File_Reader ( tree_f, &tree.start ) == ERR_READ ) {
+     55: 
+     56:         return 0;
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:35:40, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:35:43
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BD9C в функции File_Reader() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 82. Попытка записать данные по адресу 0x0000000C в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x3990 (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BD9C in D:\Sasha's\program\ded\akinatorr\main.exe: File_Reader() at D:/Sasha's/program/ded/akinatorr/main.cpp (82):
+
+     80:     //int size = 100;
+     81: 
+=>   82:     (*tree)->error_ind = fscanf ( f, "%s", &word );
+     83:     //getdelim ( &word, &size, "\n", f );
+     84:     //getline  ();
+
+# 1 0x0042BCC9 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (54):
+
+     52:     FILE *tree_f = fopen ( "tree.txt", "r+" );
+     53: 
+=>   54:     if ( File_Reader ( tree_f, &tree.start ) == ERR_READ ) {
+     55: 
+     56:         return 0;
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:35:40, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:35:43
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BDA4 в функции File_Reader() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 83. Попытка записать данные по адресу 0x0000000C в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x49E8 (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BDA4 in D:\Sasha's\program\ded\akinatorr\main.exe: File_Reader() at D:/Sasha's/program/ded/akinatorr/main.cpp (83):
+
+     81:     //int size = 100;
+     82: 
+=>   83:     (*tree)->error_ind = fscanf ( f, "%s", &word );
+     84:     //getdelim ( &word, &size, "\n", f );
+     85:     //getline  ();
+
+# 1 0x0042BCD1 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     FILE *tree_f = fopen ( "tree.txt", "r+" );
+     54: 
+=>   55:     if ( File_Reader ( tree_f, &tree.start ) == ERR_READ ) {
+     56: 
+     57:         return 0;
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:37:26, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:37:30
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BDA4 в функции File_Reader() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 83. Попытка записать данные по адресу 0x0000000C в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x49E8 (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BDA4 in D:\Sasha's\program\ded\akinatorr\main.exe: File_Reader() at D:/Sasha's/program/ded/akinatorr/main.cpp (83):
+
+     81:     //int size = 100;
+     82: 
+=>   83:     (*tree)->error_ind = fscanf ( f, "%s", &word );
+     84:     //getdelim ( &word, &size, "\n", f );
+     85:     //getline  ();
+
+# 1 0x0042BCD1 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     FILE *tree_f = fopen ( "tree.txt", "r+" );
+     54: 
+=>   55:     if ( File_Reader ( tree_f, &tree.start ) == ERR_READ ) {
+     56: 
+     57:         return 0;
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:37:26, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:37:30
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x2770 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:41:59, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:42:03
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x2770 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:41:59, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:42:03
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x48F0 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:42:27, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:42:31
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFD9 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x48F0 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFD9 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 14:42:27, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 14:42:31
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042C1C2 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 191. Попытка записать данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x3D1C (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042C1C2 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (191):
+
+    189:             ((*tree)->left)->data = strdup( true_answer );
+    190:             (*tree)->data = strdup ( difference );
+=>  191:             ((*tree)->right)->data = strdup ( temp );
+    192: 
+    193:             printf ( "Now I know who it is. You can't beat me now \n" );
+
+# 1 0x0042C1E3 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (197):
+
+    195:             return ;
+    196:         }
+=>  197:         Akinator ( &(*tree)->left );
+    198:     }
+    199:     // error
+
+# 2 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 15:10:30, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 15:10:35
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042C1C2 в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 191. Попытка записать данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x3D1C (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042C1C2 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (191):
+
+    189:             ((*tree)->left)->data = strdup( true_answer );
+    190:             (*tree)->data = strdup ( difference );
+=>  191:             ((*tree)->right)->data = strdup ( temp );
+    192: 
+    193:             printf ( "Now I know who it is. You can't beat me now \n" );
+
+# 1 0x0042C1E3 in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (197):
+
+    195:             return ;
+    196:         }
+=>  197:         Akinator ( &(*tree)->left );
+    198:     }
+    199:     // error
+
+# 2 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 15:10:30, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 15:10:35
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFDC в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x20B0 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFDC in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 18:32:56, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 18:33:05
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BFDC в функции Akinator() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 148. Попытка прочесть данные по адресу NULL в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x20B0 (Main), GetLastError(): 131 (Попытка поместить указатель на файл перед началом файла), _doserrno: 131 (Unknown error). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BFDC in D:\Sasha's\program\ded\akinatorr\main.exe: Akinator() at D:/Sasha's/program/ded/akinatorr/main.cpp (148):
+
+    146: void Akinator ( struct Knot **tree )
+    147: {
+=>  148:     printf ( SPECIFIER, (*tree)->data );
+    149:     printf ( "?\n" );
+    150: 
+
+# 1 0x0042BCD5 in D:\Sasha's\program\ded\akinatorr\main.exe: main() at D:/Sasha's/program/ded/akinatorr/main.cpp (55):
+
+     53:     File_Reader ( tree_f, &tree.start );
+     54: 
+=>   55:     Akinator ( &tree.start );
+     56: 
+     57:     fclose ( tree_f );
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 24 2023 18:32:56, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 24 2023 18:33:05
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib предупреждает:
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BEAA в функции File_Reader() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 112. Попытка прочесть данные по адресу 0x74732028 в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+#1: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x4534 (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BEAA in D:\Sasha's\program\ded\akinatorr\main.exe: File_Reader() at D:/Sasha's/program/ded/akinatorr/main.cpp (112):
+
+    110:         return OK;
+    111:     }
+=>  112: $   (*tree)->data = strdup( word );
+    113: 
+    114: $   File_Reader ( &((*tree)->left) , f ); //?????  //
+# 2 0x76D7CA67 in C:\WINDOWS\System32\msvcrt.dll: strerror_s()
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 26 2023 16:58:32, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 26 2023 16:58:36
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------
+
+--------------------------------------------------
+TXLib соболезнует...
+
+Программа: D:\Sasha's\program\ded\akinatorr\main.exe,
+
+ВНЕЗАПНО: signal (11, 0x00): SIGSEGV: Доступ по неверному указателю. Ставьте ассерты! 
+
+Нарушение доступа к памяти.
+
+#1: Исключение EXCEPTION_ACCESS_VIOLATION (0xC0000005) при выполнении кода по адресу 0x0042BEAA в функции File_Reader() в файле D:/Sasha's/program/ded/akinatorr/main.cpp на строке 112. Попытка прочесть данные по адресу 0x74732028 в модуле D:\Sasha's\program\ded\akinatorr\main.exe. Спасибо _txVectoredExceptionHandler(), что сообщил. Люблю его <3
+
+С помощью функции signal() вы можете сами обработать эту ошибку.
+
+#2: TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400], Instance: 0x005052FC (32-bit), Flags: Cmdre0, Thread: 0x4534 (Main). 
+
+--------------------------------------------------
+Стек вызовов:
+
+# 0 0x0042BEAA in D:\Sasha's\program\ded\akinatorr\main.exe: File_Reader() at D:/Sasha's/program/ded/akinatorr/main.cpp (112):
+
+    110:         return OK;
+    111:     }
+=>  112: $   (*tree)->data = strdup( word );
+    113: 
+    114: $   File_Reader ( &((*tree)->left) , f ); //?????  //
+# 2 0x76D7CA67 in C:\WINDOWS\System32\msvcrt.dll: strerror_s()
+
+--------------------------------------------------
+Developed with:
+
+The Dumb Artist Library (TX Library)
+TXLib [Ver: 00173a, Rev: 172, Date: 2023-08-12 11:12:24 +0400]
+Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>
+See license on: http://txlib.ru
+
+TXLib file:	c:\users\admin\downloads\codeblocks\mingw\include\txlib.h
+Compiled:	Nov 26 2023 16:58:32, GNU g++ 4.8.1, std=201103L, MinGW Runtime 3.20, 32-bit, DEBUG
+Started:	Nov 26 2023 16:58:36
+
+Run file:	D:\Sasha's\program\ded\akinatorr\main.exe
+Directory:	D:\Sasha's\program\ded\akinatorr
+
+--------------------------------------------------

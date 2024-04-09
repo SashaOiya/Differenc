@@ -1,349 +1,265 @@
-#include <stdio.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
-#include <time.h>
+#include "akin.h"
 
-#ifdef DEBUGG
-#define $ printf ( "function <%s> line <%d>\n ", __PRETTY_FUNCTION__, __LINE__ );
-#else
-#define $
-#endif
+static const int DUMP_COUNTER = 100;
 
-char *s = nullptr;
-int p = 0;
-
-enum Node_Type_t {
-    NUM = 0,
-    OP  = 1,
-    VAR = 2,
-    KEY = 3
-};
-
-enum Option_t {
-    OP_ADD = '+',  // +
-    OP_SUB = '-',  // -
-    OP_DIV = '/',  // /
-    OP_MUL = '*',  // *
-    OP_VAR = 'x',  // x
-    OP_BRA = '(',  // (
-    CL_BRA = ')',  // )
-    OP_POW = '^'   // ^
-};
-
-struct Node_t {
-    int value       = 0;
-    Node_Type_t type;
-    Node_t *left     = 0;
-    Node_t *right    = 0;
-};
-
-struct Tree_t {
-    Node_t *start = nullptr;
-    //Array
-};
-
-enum Errors_t {
-    OK_TREE   = 0,
-    ERR_FREAD = 1,
-    ERR_INPUT = 2,
-    ERR_FOPEN = 3,
-    ERR_RLINE = 4,
-    ERR_CALLO = 5,
-    ERR_CYCLE = 6,
-    ERR_CTYPE = 7
-};
-
-int GetFileSize ( FILE * f );
-Node_t *GetN  ();
-Node_t *GetG  ( char * str, struct Node_t *tree );
-Node_t *GetE  ();
-Node_t *GetT  ();
-Node_t *GetP  ();
-Node_t *GetId ();
-void Analitic ( char *buffer, struct Node_t *tree );
-void Tree_Text_Dump ( const struct Node_t *tree_node );
-Node_t *Create_Node ( Option_t option, int value, struct Node_t *left, struct Node_t *right );
-Errors_t Tree_Graph_Dump ( const struct Node_t *tree );
-void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump );
-double Eval ( const struct Node_t *node );
-Errors_t FromType_ToOption ( struct Node_t *tree_node );
-Node_t *d ( const struct Node_t *tree );
-char *Skip_Spaces ( char *buffer );
-Node_t *c ( const struct Node_t *tree );
-
-FILE *logfile = fopen ( "logs/log.html", "w" );
-
-int main ()
+int main ()     // srazy chackat dump new
 {
-    struct Tree_t tree = {};// realloc
+    struct Tree_t tree = {};
+    Stack_t Stack = {};
+    Akin_Text_t file = {};
 
-    FILE *f = fopen ( "start.txt", "r" );
-    assert ( f != nullptr );
+    if ( Akin_Ctor ( &file, &Stack ) != NO_ERR ) {
 
-    int f_size = GetFileSize ( f );
+        return -1;
+    }
 
-    char *buffer = ( char *)calloc ( f_size + 1, sizeof ( char ) );
-    assert ( buffer != nullptr );
+    if ( File_Reader ( &tree.start, file.input_f ) != NO_ERR ) {
+        // dtor
+        return EXIT_FAILURE;
+    }
 
-    fread ( buffer, sizeof( buffer[0] ), f_size, f );   // error
+    Mode_t akin_mode = NO_MODE;
+    do {
+        akin_mode = Akin_Interface_Input ( tree.start );
+        if ( akin_mode == MODE_START ) {
+            if ( Akinator ( &tree.start, &Stack ) ) {
 
-    tree.start = GetG ( buffer, tree.start );
+                return EXIT_FAILURE;
+            }
+            //Tree_Verificator ( tree.start );
+            reverse_array ( Stack.data, Stack.capacity );
+        }
+        else if ( akin_mode == MODE_DEFINE ) {
+            Akinator_Definition ( tree.start, &Stack );
+        }
+    } while ( akin_mode != MODE_BYE );
 
-    //printf ( "%d\n", val );
+    free ( file.input_f );
 
-    //Analitic ( buffer, tree.start );
+    FILE *tree_f = fopen ( "tree.txt", "w" );
+    if ( !tree_f ) {
+        perror ( "File opening failed" );
 
-    Tree_Graph_Dump ( tree.start );
-    Tree_Text_Dump ( tree.start );
+        return ERR_FOPEN;
+    }
 
-    FromType_ToOption ( tree.start );
+    File_Write_Node ( tree.start, tree_f );
+    Tree_Graph_Dump ( tree.start );   //
 
-    //printf ( "%g\n", Eval ( tree.start ) );
+$   Tree_Text_Dump ( tree.start );
 
-    Node_t *tree_c = d ( tree.start );
+    fclose ( tree_f );
 
-    Tree_Graph_Dump ( tree_c );
-    Tree_Text_Dump ( tree_c );
+    Akin_Tree_Dtor ( &tree );
 
     return 0;
 }
 
-Node_t *GetG ( char * str, struct Node_t *tree )
+Errors_t Akin_Ctor ( struct Akin_Text_t *File, struct Stack_t *stack ) // change File
 {
-    s = str;
-    p = 0;
+    assert ( File != nullptr );
+    assert ( stack != nullptr );
 
-    //assert ( s[p] == '\0' ); //my_assert
-    tree = GetE();
+    Stack_Ctor ( stack );
 
-    return tree;
-}
+    File->input_f = fopen ( "tree.txt", "r" );  // argv // rw fseek
+    if ( !File->input_f ) {                           // move to struct
+        perror ( "File opening failed" );
 
-Node_t *GetN ()
-{
-    int val = 0;
-    int prev_p = p;
-
-    while ( s[p] >= '0' && s[p] <= '9' ) {
-        val = val * 10 + s[p] - '0';
-        ++p;
+        return ERR_FOPEN;
     }
-    assert ( p > prev_p );
 
-    return Create_Node ( (Option_t)NUM, val, nullptr, nullptr );
+    return NO_ERR;
 }
 
-Node_t *GetId ()
+Errors_t File_Reader ( struct Node_t **tree, FILE * input_f ) // *tree?
 {
-    char data[50] = {};//size
-    int prev_p = p;
+    assert ( tree != nullptr );
+    assert ( input_f != nullptr );
 
-    for ( int i = 0; isalpha( s[p] ); ) {
-        data[i++] = s[p];
-        ++p;
+    const int size = 100;  // getfilesize
+    char data[size] = {};
+    int n_arg = 0;      //
+
+    if ( ( n_arg = my_getline_file ( data, input_f ) ) == 0 || n_arg == EOF ) {
+
+        return ERR_FREAD;
     }
-    assert ( p > prev_p );
-    if ( strcmp ( data, "x" ) == 0 ) {
+    if ( *data == ')' ) {
+        if ( my_getline_file ( data, input_f ) == ERR_RLINE ) {   //
 
-        return Create_Node ( (Option_t)VAR, OP_VAR, nullptr, nullptr );
-    }
-    printf ( "NO X\n" );
-
-    return Create_Node ( (Option_t)KEY, -1, nullptr, nullptr );  // val???
-}
-
-int GetFileSize ( FILE * f )
-{
-    int prev = ftell ( f );
-
-    fseek ( f, 0, SEEK_END );
-    size_t size_not_blue = ftell ( f );
-    fseek ( f, prev, SEEK_SET );
-
-    return size_not_blue;
-}
-
-Node_t *GetE ()
-{
-    Node_t *val = GetT ();
-    while ( s[p] == '+' || s[p] == '-' )
-    {
-        int op = s[p];
-        p++;
-        Node_t *val_2 = GetT ();
-
-        switch ( op ) {
-            case '+' : {
-                val = Create_Node( (Option_t)OP, OP_ADD, val, val_2 );
-                break;
-            }
-            case '-' : {
-                val = Create_Node( (Option_t)OP, OP_SUB, val, val_2 );
-                break;
-            }
-            default : {
-                printf ( "Error" );
-                break;
-            }
+            return ERR_RLINE;
         }
     }
-    return val;
-}
-
-Node_t *GetT ()
-{
-    Node_t *val = GetP ();
-
-    while ( s[p] == '*' || s[p] == '/' ) {
-        char op = s[p];
-        p++;
-
-        Node_t *val_2 = GetP ();
-
-        switch ( op ) {
-            case '*' : {
-                val = Create_Node( (Option_t)OP, OP_MUL, val, val_2 );
-                break;
-            }
-            case '/' : {
-                val = Create_Node( (Option_t)OP, OP_DIV, val, val_2 );
-                break;
-            }
-            default : {
-                printf ( "Error" );
-                break;
-            }
+    if ( *data == '(' ) {
+        *tree = (Node_t *)calloc ( 1, sizeof ( Node_t ) );
+        if ( !(*tree) ) {
+            free ( *tree );
+            // dtor
+            return ERR_CALLO;
         }
+$       n_arg = my_getline_file ( data, input_f );
     }
-    return val;
+    if ( n_arg == 0 || n_arg == EOF || n_arg > size ) {
+        (*tree)->err_gauge =   ( (*tree)->err_gauge ) |
+                             ( ( (*tree)->err_gauge | 1 ) << ERR_FREAD );
+
+        return ERR_FREAD;
+    }
+    if ( strcmp ( data, "\0" )  == 0 ||
+         strcmp ( data, "nil" ) == 0 ) {
+
+        return NO_ERR;
+    }
+    ++((*tree)->count);
+$   (*tree)->data = strdup( data );
+
+$   if ( File_Reader ( &((*tree)->left) , input_f ) != NO_ERR ||
+         File_Reader ( &((*tree)->right), input_f ) != NO_ERR ) {
+
+        return (Errors_t)n_arg;
+    }
+
+    n_arg = my_getline_file ( data, input_f );
+    if ( *data != ')' || n_arg == ERR_RLINE ) {
+        printf ( "ERROR\n" );
+
+        return ERR_FREAD;
+    }
+
+    return NO_ERR;
 }
 
-Node_t *GetP ()
+void Tree_Text_Dump ( const struct Node_t *tree_node )   // +
 {
-    if ( s[p] == '(' ) {
-
-        Node_t *val = nullptr;
-        p++;
-        val = GetE ();
-
-        assert ( s[p] == ')' );
-        p++;
-
-        return val;
-    }
-    else if ( isalpha ( s[p] ) ) {
-
-        Node_t *val = GetId ();
-
-        // function Id '(' E ')'
-
-        return val;
-    }
-    else {
-
-        return GetN ();
-    }
-}
-
-Node_t *Create_Node ( Option_t option, int value, struct Node_t *left, struct Node_t *right )
-{
-    struct Node_t *tree_c = ( Node_t *)calloc ( 1, sizeof ( Node_t ) );
-    if ( !tree_c ) {
-        free ( tree_c );
-    }
-    tree_c->type = (Node_Type_t)option;
-    tree_c->value = value;
-    tree_c->left = left;
-    tree_c->right = right;
-
-    return tree_c;
-}
-
-char *Skip_Spaces ( char *buffer )
-{
-    while ( *buffer == ' ' ) {
-        ++buffer;
-    }
-
-    return buffer;
-}
-
-/*void Analitic ( char *buffer, struct Node_t *tree )
-{
-    if ( tree == nullptr || buffer == '\0' ) {
-
-        return ;
-    }
-    buffer = Skip_Spaces ( buffer );
-    char *start = buffer;
-
-    tree->type = OP;
-
-    if ( isdigit ( *buffer ) ) {
-        while ( isdigit ( *buffer ) ) {
-            ++buffer;
-        }
-        tree->type = NUM;
-        tree->value = atoi ( start );
-
-        //Analitic ( buffer, tree->left );
-        //Analitic ( buffer, tree->right );
-    }
-
-    if      ( *buffer == '-' ) {
-         tree->value = OP_SUB;
-    }
-    else if ( *buffer == '+' ) {
-        tree->value = OP_ADD;
-    }
-    else if ( *buffer == '/' ) {
-        tree->value = OP_DIV;
-    }
-    else if ( *buffer == '*' ) {
-        tree->value = OP_MUL;
-    }
-    else if ( *buffer == 'x' ) {
-        tree->type = VAR;
-        tree->value = OP_VAR;
-    }
-    ++buffer;  //error
-    Analitic ( buffer, tree->left );
-    Analitic ( buffer, tree->right );
-
-} */
-
-void Tree_Text_Dump ( const struct Node_t *tree_node )
-{
-
     if ( tree_node == nullptr) {
+        printf ( " nil " );
 
         return ;
     }
     printf ( " ( " );
+    printf ( "%s", tree_node->data );
 
     Tree_Text_Dump ( tree_node->left  );
-
-    if ( tree_node->type == NUM ) {
-        printf ( "%d", tree_node->value );
-    }
-    else {
-        printf ( "%c", tree_node->value );
-    }
-
     Tree_Text_Dump ( tree_node->right );
 
     printf ( " ) " );
 
 }
 
-Errors_t Tree_Graph_Dump ( const struct Node_t *tree )
+void File_Write_Node  ( const struct Node_t *tree_node, FILE *tree_f )  // change file* to char*
 {
-    static int file_count = 0;
+    if ( tree_node == nullptr ) {
+        fprintf ( tree_f, "nil\n" );
 
+        return ;
+    }
+    fprintf ( tree_f, "(\n" );
+    fprintf ( tree_f, "%s", tree_node->data );
+    fprintf ( tree_f, "\n"  );
+
+    File_Write_Node ( tree_node->left,  tree_f );
+    File_Write_Node ( tree_node->right, tree_f );
+
+    fprintf ( tree_f,  ")\n" );
+
+}
+
+Errors_t Akinator ( struct Node_t **tree, struct Stack_t *Stack )  // little letter
+{
+    assert ( tree != nullptr );
+    assert ( Stack != nullptr );
+
+    print_color ( (*tree)->data, COLOR_YELLOW );
+    print_color ( "?\n", COLOR_YELLOW );
+
+    char answer[10] = {};
+    my_getline_console ( answer );   // weird
+
+    if ( strcmp ( answer, "yes" ) == 0 ) {
+        if ( (*tree)->right == nullptr )  {
+            print_color ( "Stupid man, think of something more complicated! BUGAGA\n", COLOR_GREEN );
+
+            return NO_ERR;
+        }
+        else if ( (*tree)->right != nullptr ) {
+            Stack_Push ( Stack, YES );    //
+            Akinator ( &(*tree)->right, Stack );
+        }
+    }
+    else if ( strcmp ( answer, "no" ) == 0 ) {          // new function
+        if ( (*tree)->left == nullptr ) {
+            print_color ( "Enter your answer option\n", COLOR_BLUE );       //  separate func
+                                                                            //
+            char true_answer[100] = {};                                     //
+$           while ( !my_getline_console ( true_answer ) ) {                 //
+                printf ( "Incorrectly entered value. Please, try again\n" );//
+            }                                                               //
+
+            print_color ( "How does %s differ from %s?\n", COLOR_BLUE, true_answer, (*tree)->data );   //
+                                                                                                       //
+            char difference[100] = {};                                                                 //
+$           while ( !my_getline_console ( difference ) ) {                                             //
+                printf ( "Incorrectly entered value. Please, try again\n" );                           //
+            }                                                                                          //
+
+            (*tree)->left  = (Node_t *)calloc ( 1, sizeof ( Node_t ) );   // for this
+            (*tree)->right = (Node_t *)calloc ( 1, sizeof ( Node_t ) );
+            if ( !( (*tree)->right && (*tree)->left ) ) {
+                free ( (*tree)->left  );
+                free ( (*tree)->right );
+
+                print_color ( "Buffer memory allocation error."
+                              "Please, try again \n", COLOR_RED );
+
+                Akinator ( tree, Stack );
+            }
+
+$           ((*tree)->left)->data  = strdup ( (*tree)->data );
+            ((*tree)->right)->data = strdup ( true_answer );
+$           (*tree)->data          = strdup ( difference );
+
+            print_color ( "Now I know who it is. You can't beat me now \n", COLOR_GREEN );
+
+            return NO_ERR;
+        }
+        else {
+            Stack_Push ( Stack, NO );    //
+            Akinator ( &(*tree)->left, Stack );
+        }
+    }
+    else {
+        print_color ( "Sorry, but you have to answer \"yes\" or \"no\"\n", COLOR_RED );
+        Akinator ( tree, Stack );
+    }
+
+    return NO_ERR;
+}
+
+void Akin_Tree_Dtor ( struct Tree_t *tree ) //struct File_t *file ) // +
+{
+    Node_Free ( &(tree->start) );
+    //free ( file->out_buffer );
+    //fclose ( file->front_f );
+}
+
+void Node_Free ( struct Node_t **tree_node ) // +
+{
+    if ( tree_node != nullptr && *tree_node != nullptr ) {
+        Node_Free ( &((*tree_node)->left) );
+        Node_Free ( &((*tree_node)->right));
+
+        (*tree_node)->left = nullptr;
+        (*tree_node)->right = nullptr;
+        free ( (*tree_node)->left );
+        free ( (*tree_node)->right );
+
+        *tree_node = nullptr;
+    }
+}
+
+Errors_t Tree_Graph_Dump ( const struct Node_t *tree ) // +
+{
     FILE *tree_dump = fopen ( "tree.dot", "w" );
     if ( !tree_dump ) {
         perror ( "File opening failed" );
@@ -360,161 +276,115 @@ Errors_t Tree_Graph_Dump ( const struct Node_t *tree )
     fprintf ( tree_dump, "}\n" );
     fclose ( tree_dump );
 
-    //system ( "del list.png" );
-    const int SIZE = 100;
-    char name[100];
-    fprintf( logfile, "<img src=\"tree%d.png\" alt=\"-\" width=\"500\" height=\"600\">\n", file_count);
-    sprintf( name, "dot -T png tree.dot -o logs/tree%d.png", file_count++ );
-    system ( name );
-    //system ( "tree.png" );
+    static int file_counter = 0;
+    char command_buffer[DUMP_COUNTER] = {};
+    fprintf( log(), "<img src=\"tree%d.png\" alt=\"-\" width=\"500\" height=\"600\">\n", file_counter );
+    sprintf( command_buffer, "dot -T png tree.dot -o logs/tree%d.png", file_counter++ );
+    system ( command_buffer );
 
-    return OK_TREE;
+    return NO_ERR;
 }
 
-void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump )
+void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump_f ) // +
 {
+    assert ( tree_dump_f != nullptr );
+
     if ( tree == nullptr) {
 
         return ;
     }
-    if ( tree->type == NUM ) {
-        fprintf ( tree_dump , " \"%p\" [shape = Mrecord, style = filled, fillcolor = lightpink "
-                          " label = \"data: %d \"];\n",tree, tree->value );
-    }
-    else {
-        fprintf ( tree_dump , " \"%p\" [shape = Mrecord, style = filled, fillcolor = lightpink "
-                          " label = \"data: %c \"];\n",tree, tree->value );
-    }
+    fprintf ( tree_dump_f , " \"%p\" [shape = Mrecord, style = filled, fillcolor = lightpink "
+                          " label = \"data: %s \"];\n",tree, tree->data );
     if ( tree->left != nullptr ) {
-        fprintf ( tree_dump, "\"%p\" -> \"%p\" ", tree, tree->left );
+        fprintf ( tree_dump_f, "\"%p\" -> \"%p\" ", tree, tree->left );
     }
     if ( tree->right != nullptr ) {
-        fprintf ( tree_dump, "\n \"%p\" -> \"%p\" \n", tree, tree->right );
+        fprintf ( tree_dump_f, "\n \"%p\" -> \"%p\" \n", tree, tree->right );
     }
 
-    Tree_Dump_Body ( tree->left,  tree_dump );
-    Tree_Dump_Body ( tree->right, tree_dump );
+    Tree_Dump_Body ( tree->left,  tree_dump_f );
+    Tree_Dump_Body ( tree->right, tree_dump_f );
 }
 
-double Eval ( const struct Node_t *node )
+Errors_t Tree_Verificator ( struct Node_t *tree ) // hyita
 {
-    if ( node == nullptr ) {
-
-        return NULL;
-    }
-    if ( node->type == NUM ) {
-
-        return node->value;
-    }
-    else if ( node->type == VAR ) {
-
-        //return atof ( node->data );   //
-    }
-    double left  = Eval ( node->left );
-    double right = Eval ( node->right );
-
-    switch ( node->type ) {
-        case OP_ADD : {
-
-            return left + right;
-            break;
-        }
-        case OP_SUB : {
-
-            return left - right; // left or right
-            break;
-        }
-        case OP_DIV : {
-
-            return left / right; // left or right// /
-            break;
-        }
-        case OP_MUL : {
-
-            return left * right;
-            break;
-        }
-        default :{
-            printf ( "ERROR\n" );
-
-            break;
-        }
-    }
-
-    return ERR_CTYPE;
-}
-
-Errors_t FromType_ToOption ( struct Node_t *tree_node )
-{
-    if ( !tree_node || tree_node->type != OP ) {
-
-        return OK_TREE;
-    }
-    if ( tree_node->type == OP ) {
-        tree_node->type = (Node_Type_t)tree_node->value;
-        // error
-    }
-    FromType_ToOption ( tree_node->left  );
-    FromType_ToOption ( tree_node->right );
-
-    return OK_TREE;
-}
-
-Node_t *d ( const struct Node_t *tree )
-{
-    // dump
     if ( tree == nullptr ) {
 
-        return nullptr;
+        return NO_ERR;
     }
-    if ( tree->type == NUM ) {
+    if ( tree->count != TREE_ONE_CALL ) {
+        printf ( "There is a loop or an unused node \n" );
+        tree->err_gauge = ( tree->err_gauge ) | ( ( tree->err_gauge | 1 ) << ERR_CYCLE );
 
-        return Create_Node ( (Option_t)NUM, 0, nullptr, nullptr );
+        return ERR_CYCLE;
     }
-    else if ( tree->type == VAR ) {
+    if ( ( ( tree->err_gauge >> ERR_FREAD ) & 1 ) == 1 ) {
+        printf ( "Read error\n" );
 
-        return Create_Node ( (Option_t)NUM, 1, nullptr, nullptr );
+        return ERR_FREAD;
+    }
+    Tree_Verificator ( tree->left  );
+    Tree_Verificator ( tree->right );
+
+    return NO_ERR;
+}
+
+void Akinator_Definition ( const struct Node_t *tree, struct Stack_t *stack )  // hyita
+{
+    if ( tree == nullptr || stack->capacity == 0 ) {
+
+        return;
+    }
+    if ( Stack_Pop ( stack ) == YES ) {
+        print_color ( tree->data, COLOR_PINK );
+
+        Akinator_Definition ( tree->right, stack );
+    }
+    else if ( Stack_Pop ( stack ) == NO ) {
+
+        Akinator_Definition ( tree->left, stack );
+    }
+
+}
+
+Mode_t Akin_Interface_Input ( const struct Node_t *tree )
+{
+$   const int max_buf_value = 100;
+$   char buf[max_buf_value] = {};
+
+    print_color ( "Select mode\n", COLOR_BLUE );
+    scanf ( "%s", buf );
+    getchar ( );
+
+    if ( strcmp ( buf, "start" ) == 0 ) {
+
+        return MODE_START;
+    }
+    else if ( strcmp( buf, "help" ) == 0 ) {
+
+        print_color ( "Here is a list of supported features :"
+                      "\n\n  start  \n\n  help  \n\n  bye  \n\n  definition  \n\n  dump \n\n", COLOR_BLUE );
+
+$       return MODE_HELP;
+    }
+    else if ( strcmp ( buf, "bye" ) == 0 ) {
+
+        return MODE_BYE;
+    }
+    else if ( strcmp ( buf, "definition" ) == 0 ) {
+
+        return MODE_DEFINE;
+    }
+    else if ( strcmp ( buf, "dump" ) == 0 ) {
+        Tree_Graph_Dump ( tree );
+
+        return MODE_DUMP;
     }
     else {
-        switch ( tree->type ) {
-            case OP_ADD : {
-                return Create_Node ( (Option_t)OP, OP_ADD, d ( tree->left ), d ( tree->right ) );
-                break;
-            }
-            case OP_SUB : {
-                return Create_Node ( (Option_t)OP, OP_SUB, d ( tree->left ), d ( tree->right ) );
-                break;
-            }
-            case OP_MUL : {
-                return Create_Node ( (Option_t)OP, OP_ADD, Create_Node ( (Option_t)OP, OP_MUL, d ( tree->left ), c ( tree->right ) ),
-                                                           Create_Node ( (Option_t)OP, OP_MUL, c ( tree->left ), d ( tree->right ) ) );
-                break;
-            }
-            case OP_DIV : {
-                return Create_Node ( (Option_t)OP, OP_DIV, Create_Node ( (Option_t)OP, OP_SUB, Create_Node ( (Option_t)OP, OP_MUL, d ( tree->left ), c ( tree->right ) ),
-                                                                                               Create_Node ( (Option_t)OP, OP_MUL, c ( tree->left ), d ( tree->right ) )),
-                                                           Create_Node ( (Option_t)OP, OP_MUL, c ( tree->right ), c ( tree->right ) ) );
-                break;
-            }
-            // default
-        }
-    }
-    //return tree_c;
-}
+        print_color ( "This option was not found. Use the list of presented functions:\n", COLOR_RED );
 
-Node_t *c ( const struct Node_t *tree )
-{
-    if ( tree == nullptr ) {
-
-        return nullptr;
+        return MODE_ERROR;
     }
 
-    return Create_Node ( (Option_t)tree->type, tree->value, tree->left, tree->right );
+    return MODE_ERROR;
 }
-
-
-
-
-
-
-

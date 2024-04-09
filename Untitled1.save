@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int my_getdelim ( char *buffer, int *size, char *specifier, FILE *f );
+
+int main () 
+{
+    my_getdelim ( char *buffer, int *size, char *specifier, FILE *f )
+    
+    return 0;
+}
+
+int my_getdelim ( char *buffer, int *size, char *specifier, FILE *f )
+{
+    char temp[50]    = {};
+    char buffer[200] = {};
+    
+    
+    while ( temp[0] != "\0" ) {
+        fscanf ( f, "%s", &temp );
+        strcat ( buffer, temp );
+    }
+    
+    return 0;
+}
+        
