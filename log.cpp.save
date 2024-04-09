@@ -1,0 +1,5 @@
+
+FILE *log ()
+{
+    static FILE *log_f = fopen 
+    return 
