@@ -1,27 +1,24 @@
 digraph G { 
 node [shape = record];
- "007D1878"  "007D1878" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "+ "];
-"007D1878" -> "007D18C0" 
- "007D1878" -> "007D1818" 
- "007D18C0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "* "];
-"007D18C0" -> "007D1890" 
- "007D18C0" -> "007D1800" 
- "007D1890" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "-2 "];
- "007D1800" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "^ "];
-"007D1800" -> "007D18A8" 
- "007D1800" -> "007D18D8" 
- "007D18A8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "x "];
- "007D18D8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "5 "];
- "007D1818" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "+ "];
-"007D1818" -> "007D1920" 
- "007D1818" -> "007D63B8" 
- "007D1920" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "sin "];
-
- "007D1920" -> "007D1950" 
- "007D1950" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "* "];
-"007D1950" -> "007D6448" 
- "007D1950" -> "007D63E8" 
- "007D6448" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "5 "];
- "007D63E8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "x "];
- "007D63B8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "6 "];
+ "00B517C8"  "00B517C8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "+ "];
+"00B517C8" -> "00B58500" 
+ "00B517C8" -> "00B58320" 
+ "00B58500" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "- "];
+"00B58500" -> "00B58290" 
+ "00B58500" -> "00B58308" 
+ "00B58290" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "+ "];
+"00B58290" -> "00B582C0" 
+ "00B58290" -> "00B582D8" 
+ "00B582C0" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "2 "];
+ "00B582D8" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "4 "];
+ "00B58308" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "* "];
+"00B58308" -> "00B58218" 
+ "00B58308" -> "00B58278" 
+ "00B58218" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "7 "];
+ "00B58278" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "x "];
+ "00B58320" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "^ "];
+"00B58320" -> "00B58368" 
+ "00B58320" -> "00B58338" 
+ "00B58368" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "2 "];
+ "00B58338" [shape = Mrecord, style = filled, fillcolor = lightpink  label = "4 "];
 }

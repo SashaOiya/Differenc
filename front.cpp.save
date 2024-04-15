@@ -1,32 +1,13 @@
 #include "recurs_des.h"
 #include "front.h"
-#include "my_prog.h"
 
 static const int DUMP_COUNTER = 100;
+const double eps = 0.0000001;
 
-int main ( int argc, char *argv[] ) //FIXME: add const
-{
-    struct Tree_t tree = {};
-    struct File_t file = {};
-
-    Diff_Tree_Ctor ( &file, &tree, argv[1] );
-    Tree_Graph_Dump ( tree.start_node );
-
-    Diff_Interface ( tree.start_node );
-
-    FILE* latex_file = fopen ( "latex.txt", "w" );
-    if ( latex_file ) {
-        Print_Latex ( tree.start_node, latex_file );
-        fclose ( latex_file );
-    }
-    Diff_Tree_Dtor ( &file, &tree );
-
-    return 0;
-}
-
-void Diff_Interface ( const struct Node_t *start_node )
+void Diff_Interface ( const struct Node_t *start_node, FILE *latex_file )
 {
     assert ( start_node != nullptr );
+    assert ( latex_file != nullptr );
 
     Prog_Mode_t dif_mode = MODE_ERROR;
 
@@ -36,91 +17,43 @@ void Diff_Interface ( const struct Node_t *start_node )
 
         switch ( dif_mode ) {
             case MODE_BYE : {
+                Print_Latex ( tree_c, latex_file );
 
                 return ;
-                break;
             }
+            break;
             case MODE_DIF : {
                 tree_c = Differentiation ( tree_c );
-                Tree_Graph_Dump ( tree_c );
-                Tree_Text_Dump ( tree_c );
-
-                break;
             }
+            break;
             case MODE_TAYLOR : {
                 tree_c = Taylor ( tree_c );
-                Tree_Graph_Dump ( tree_c );
-                Tree_Text_Dump ( tree_c );
-
-                break;
             }
+            break;
             case MODE_G_DUMP : {
-                Tree_Graph_Dump ( tree_c );
-
-                break;
             }
+            break;
             case MODE_T_DUMP : {
-                Tree_Text_Dump ( tree_c );
-
-                break;
             }
+            break;
             case MODE_HELP   : {
 
-                break;
             }
+            break;
             default          : {
                 printf ( "Error\n" );
-
-                break;
             }
+            break;
         }
+        Tree_Graph_Dump ( tree_c );
+        Tree_Text_Dump ( tree_c );
 
+        Print_Latex ( tree_c, latex_file );
         Node_Free ( &tree_c );
     } while ( dif_mode != MODE_BYE );
 }
 
-Errors_t File_Reader ( struct File_t *file )  // -
-{
-    assert ( file != nullptr );
-
-    file->front_f = fopen ( file->file_name, "r" );
-    if ( !file->front_f ) {
-        print_color ( "File opening error\n", COLOR_RED );
-
-        return ERR_FREAD;
-    }
-
-    file->file_size = Get_File_Size ( file->front_f );
-
-    file->out_buffer = ( char *)calloc ( file->file_size + 1, sizeof ( char ) );
-    if ( !file->out_buffer ) {
-        print_color ( "buffer memory allocation error\n", COLOR_RED );
-        fclose ( file->front_f );
-
-        return ERR_FREAD;
-    }
-
-    int ret_code = fread ( file->out_buffer, sizeof( file->out_buffer[0] ),
-                           file->file_size, file->front_f );
-    if ( ret_code != file->file_size ) {
-        if ( feof ( file->front_f ) ) {
-            perror ( "Error reading test.bin: unexpected end of file\n" );
-        }
-        else if ( ferror ( file->front_f ) ) {
-            perror ( "Error reading test.bin" );
-        }
-        free ( file->out_buffer );
-        fclose ( file->front_f );
-
-        return ERR_FREAD;
-    }
-
-    fclose ( file->front_f );
-
-    return OK_FILE;
-}
-//TODO: rename Node_Type_t
-Node_t *Create_Node ( Node_Type_t option, int value, struct Node_t *left, struct Node_t *right ) // +
+Node_t *Create_Node ( Node_Option_t option, int value, struct Node_t *left, struct Node_t *right ) // +
 {
     struct Node_t *tree_c = ( Node_t *)calloc ( 1, sizeof ( Node_t ) );
     if ( !tree_c ) {
@@ -133,30 +66,6 @@ Node_t *Create_Node ( Node_Type_t option, int value, struct Node_t *left, struct
     tree_c->right = Copy_Node ( right );
 
     return tree_c;
-}
-
-char *File_Skip_Spaces ( char *data, int file_size ) // +
-{
-    assert ( data != nullptr );
-
-    char *buffer = (char *)calloc ( file_size + 1, sizeof ( char ) );
-    if ( !buffer ) {
-        perror ( "buffer memory allocation error\n" );
-
-        return data;
-    } // fix error
-    int position = 0;
-
-    //TODO: выход за границу
-    for ( ; *data != '\0'; ++data ) {
-        while ( isspace ( *data ) ) {
-            ++data;
-        }
-        buffer[position++] = *data;
-    }
-    buffer[position] = '\0';
-
-    return buffer;
 }
 
 void Tree_Text_Dump ( const struct Node_t *tree_node ) // +
@@ -225,6 +134,7 @@ void Tree_Dump_Body ( const struct Node_t *tree, FILE *tree_dump ) // -
               tree->type == NODE_TYPE_OP ) {
         fprintf ( tree_dump, " \"%p\" [shape = Mrecord, style = filled, fillcolor = lightpink "
                              " label = \"%s \"];\n", tree, Get_Op_Name ( tree->value ) );
+        //free ( Get_Op_Name ( tree->value ) );
     }
 
     if ( tree->left != nullptr ) {
@@ -297,7 +207,6 @@ double Eval_Body ( const struct Node_t *node, const int var_value ) // - double 
     double left  = Eval_Body ( node->left,  var_value );
     double right = Eval_Body ( node->right, var_value );
 
-    //TODO: check divide by 0
     if ( node->type == NODE_TYPE_OP ) {
         switch ( node->value ) {
             case OP_ADD : {
@@ -311,7 +220,11 @@ double Eval_Body ( const struct Node_t *node, const int var_value ) // - double 
                 break;
             }
             case OP_DIV : {
+                if ( fabs ( right ) < eps ) {
+                    printf ( "Error : div by 0\n");
 
+                    return 0;
+                }
                 return left / right;
                 break;
             }
@@ -336,8 +249,17 @@ double Eval_Body ( const struct Node_t *node, const int var_value ) // - double 
                 break;
             }
             case OP_CTG : {
+                double tan_value = tan ( right );
+                if ( fabs ( tan_value ) < eps ) {
+                    printf ( "Error : div by 0\n");
 
+                    return 0;
+                }
                 return 1 / tan ( right );
+                break;
+            }
+            case OP_POW : {
+                return left right;
                 break;
             }
             default : {
@@ -470,69 +392,6 @@ Node_t *Copy_Node ( const struct Node_t *tree)
     return new_tree;
 }
 
-int Optimization_Const  ( struct Node_t **tree_node ) // +
-{
-    if ( *tree_node == nullptr || (*tree_node)->right == nullptr || (*tree_node)->left == nullptr ) {
-$
-        return 0;
-    }
-$   if ( (*tree_node)->left->type  == NODE_TYPE_NUM &&
-         (*tree_node)->right->type == NODE_TYPE_NUM  ) {
-
-$       (*tree_node)->value = (int)Eval_Body ( *tree_node, 0 );
-$       (*tree_node)->type = NODE_TYPE_NUM;
-$       Node_Free ( &((*tree_node)->left  ) );
-$       Node_Free ( &((*tree_node)->right ) );
-
-        return OK_OCCURR;
-    }
-    else {
-        return ( Optimization_Const ( &((*tree_node)->left) ) ||
-                 Optimization_Const ( &((*tree_node)->right ) ) );
-    }
-}
-
-int Optimization_Option ( struct Node_t **tree_node )  // +-
-{
-$   if ( *tree_node == nullptr  ) {
-
-        return 0;
-    }
-$   if ( (*tree_node)->type == NODE_TYPE_OP && (*tree_node)->value == OP_MUL ) {
-        if ( (*tree_node)->left->value  == 0 || (*tree_node)->right->value == 0 ) {
-$           (*tree_node)->value = 0;
-$           (*tree_node)->type  = NODE_TYPE_NUM;
-$           Node_Free ( &((*tree_node)->left ) );
-$           Node_Free ( &((*tree_node)->right ) );
-
-            return OK_OCCURR;
-        }
-        if ( (*tree_node)->left->value  == 1 ) {  // func
-            Node_Free ( &((*tree_node)->left ) );
-            (*tree_node) = (*tree_node)->right;
-
-            return OK_OCCURR;
-        }
-        else if ( (*tree_node)->right->value == 1 ) {
-            Node_Free ( &((*tree_node)->right ) );
-            *tree_node = (*tree_node)->left; // for this moment
-
-            return OK_OCCURR;
-        }
-$
-        return 0;
-    }
-    else {
-       return ( Optimization_Option ( &(*tree_node)->left ) ||
-                Optimization_Option ( &(*tree_node)->right )  );
-    }
-}
-
-void Optimization ( struct Node_t *tree_node )
-{
-    while ( Optimization_Const  ( &tree_node ) || Optimization_Option ( &tree_node ) );
-}
-
 void Node_Free ( struct Node_t **tree_node ) // +
 {
     if ( tree_node != nullptr && *tree_node != nullptr ) {
@@ -564,149 +423,77 @@ void Diff_Tree_Dtor ( struct File_t *file, struct Tree_t *tree ) // +
 {
     Node_Free ( &(tree->start_node) );
     free ( file->out_buffer );
-    fclose ( file->front_f );
 }
 
 const char *Get_Op_Name ( int op_type )
 {
-    if ( op_type == OP_SIN ) {
+    switch ( op_type ) {
+        case OP_SIN : {
 
-        return "sin";
-    }
-    else if ( op_type == OP_COS ) {
-
-        return "cos";
-    }
-    else if ( op_type == OP_TG ) {
-
-        return "tg";
-    }
-    else if ( op_type == OP_CTG ) {
-
-        return "ctg";
-    }
-
-    //TODO: free
-    // add '/0'
-    const char *op_name = strdup ( (char *)(&op_type) );
-    //return strdup ( (char *)(&op_type) );
-}
-
-void Print_Latex ( Node_t* node, FILE* latex_file )  // stack
-{
-    fprintf ( latex_file, "\\[" );
-
-    Print_Latex_Body ( node, latex_file );
-
-    fprintf ( latex_file, "\\]" );
-}
-
-void Print_Latex_Body ( Node_t* node, FILE* latex_file )
-{
-    switch ( node->type )
-    {
-        case NODE_TYPE_OP  : {
-            Latex_Op ( node, latex_file );
-            break;
+            return "sin";
         }
-        case NODE_TYPE_NUM : {
-            fprintf ( latex_file, "%d", node->value );
-            break;
+        break;
+        case OP_COS : {
+
+            return "cos";
         }
-        case NODE_TYPE_VAR : {
-            fprintf ( latex_file, "x" );
-            break;
+        break;
+        case OP_TG  : {
+
+            return "tg";
         }
+        break;
+        case OP_CTG : {
+
+            return "ctg";
+        }
+        break;
+        case OP_ADD : {
+
+            return "+";
+        }
+        break;
+        case OP_SUB : {
+
+            return "-";
+        }
+        break;
+        case OP_DIV : {
+
+            return "/";
+        }
+        break;
+        case OP_MUL : {
+
+            return "*";
+        }
+        break;
+        case OP_VAR : {
+
+            return "x";
+        }
+        break;
+        case OP_BRA : {
+
+            return "(";
+        }
+        break;
+        case OP_CL_BRA : {
+
+            return ")";
+        }
+        break;
+        case OP_POW : {
+
+            return "^";
+        }
+        break;
         default : {
-            printf ( "Latex error\n" );
+            printf ( "Error\n" );
         }
     }
-}
-
-void Put_Op ( Node_t* node, FILE* latex_file )
-{
-    if ( node->value == OP_DIV ) {
-        fprintf ( latex_file, "}{" );
-    }
-    else if ( node->value == OP_MUL ) {
-        fprintf ( latex_file, " \\cdot " );
-    }
-    else {
-        fprintf ( latex_file, "%s", Get_Op_Name ( node->value ) );
-    }
-}
-
-void Latex_Op ( Node_t* node, FILE* latex_file ) // -
-{
-    if ( node->value == OP_DIV ) {
-        fprintf ( latex_file, " \\frac{" );
-    }
-
-    switch ( node->left->type ) {
-        case NODE_TYPE_NUM : {
-            if ( node->value == OP_MUL && node->left->value == -1 ) {
-                fprintf ( latex_file, "-" );
-            }
-            else {
-                fprintf ( latex_file, "%d", node->left->value );
-            }
-            break;
-        }
-        case NODE_TYPE_VAR : {
-            fprintf ( latex_file, "x" );
-            break;
-        }
-        case NODE_TYPE_OP : {
-            Put_Brackets ( node, latex_file, '(' );
-            Print_Latex_Body ( node->left, latex_file );
-            Put_Brackets ( node, latex_file, ')');
-            break;
-        }
-        default : {
-            break;
-        }
-    };
-    Put_Op ( node, latex_file );
-
-    switch ( node->right->type ) {
-        case NODE_TYPE_NUM : {
-            fprintf ( latex_file, "%d", node->right->value );
-            break;
-        }
-        case NODE_TYPE_VAR : {
-            fprintf ( latex_file, "x" );
-            break;
-        }
-        case NODE_TYPE_OP  : {
-            Put_Brackets ( node, latex_file, '(' );
-            Print_Latex_Body ( node->right, latex_file );
-            Put_Brackets ( node, latex_file, ')' );
-            break;
-        }
-        default : {
-            break;
-        }
-    };
-
-    if ( node->value == OP_DIV ) {
-        fprintf ( latex_file, "}" );
-    }
-}
-
-void Put_Brackets ( Node_t* node, FILE* latex_file, char bracket_type)
-{
-    if (node->value == OP_MUL)
-    {
-        if ( (node->left->type  != NODE_TYPE_NUM || (node->right->type != NODE_TYPE_OP || node->right->value != OP_DIV)) &&
-             (node->left->value != OP_DIV || node->right->value != OP_DIV))
-            fprintf (latex_file, "%c", bracket_type);
-    }
-    else if (node->value != OP_DIV)
-    {
-        if (node->right->value != OP_MUL && node->right->value != OP_DIV &&
-           (node->right->value != OP_ADD && node->right->value != OP_SUB) )
-            fprintf (latex_file, "%c", bracket_type);
-    }
+$
+    return "error";
 }
 
 Node_t *Taylor ( const struct Node_t *tree_node )

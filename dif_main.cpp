@@ -1,0 +1,29 @@
+#include "front.h"
+
+int main ( int argc, char *argv[] )
+{
+    struct Tree_t tree = {};
+    struct File_t file = {};
+
+    //if ( Diff_Tree_Ctor ( &file, &tree, ( argc > 0 ) ? argv[1] : nullptr ) != OK_TREE ) {
+    //
+    //    return -1;
+    //}
+    Diff_Tree_Ctor ( &file, &tree, argv[1] );
+    Tree_Graph_Dump ( tree.start_node );
+$
+    FILE* latex_file = fopen ( "latex.txt", "w" );
+    if ( !latex_file ) {
+$       printf ( "Open file error\n" );
+
+        return 0;
+    }
+
+    print_latex_start ( latex_file );
+    Diff_Interface ( tree.start_node, latex_file );
+    print_latex_close ( latex_file );
+$
+    Diff_Tree_Dtor ( &file, &tree );
+
+    return 0;
+}

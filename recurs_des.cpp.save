@@ -97,7 +97,7 @@ Node_t *Get_Term ( struct Position_t *position )
     int element = 0;  // char
     while ( element = Get_Binary_Element ( position->data[position->index], MODE_MUL_DIV ) ) {
         (position->index)++;
-        Node_t *part_node_right = Get_Partititon ( position );
+        Node_t *part_node_right = Get_Power ( position );
 
         part_node = Create_Node( NODE_TYPE_OP, element, part_node, part_node_right );
     }
@@ -128,11 +128,12 @@ Node_t *Get_Partititon ( struct Position_t *position )
 
 Node_t *Get_Negative_Num ( struct Position_t *position )
 {
-    // assert
+    assert ( poition != nullptr );
 
     if ( position->data[position->index] == '-' ) {
         (position->index)++;
-        Node_t *num_node = Get_Number ( position );
+        Node_t *num_node = Get_Partition ( position );
+        Node_t *Create_Node
         num_node->value  = num_node->value * (-1);
 
         return num_node;
@@ -143,14 +144,16 @@ Node_t *Get_Negative_Num ( struct Position_t *position )
 
 Node_t *Get_Power ( struct Position_t *position )
 {
+    assert ( poition != nullptr );
+
     Node_t *part_node_1 = Get_Partititon ( position );
-    
+
     if ( position->data[position->index] == '^' ) {
         (position->index)++;
         Node_t *part_node_2 = Get_Partititon ( position );
-        part_node_1 = Create_Node( NODE_TYPE_OP, OP_POW, part_node_1, part_node_2 ); 
+        part_node_1 = Create_Node( NODE_TYPE_OP, OP_POW, part_node_1, part_node_2 );
     }
-    
+
     return part_node_1;
 }
-                     
+

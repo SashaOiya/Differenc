@@ -43,7 +43,7 @@ Prog_Mode_t interface_input ( )
     const int max_buf_value = 100;
     char buf[max_buf_value] = {};
 
-    print_color ( "Select mode\n", COLOR_BLUE );
+    print_color ( "\nSelect mode\n", COLOR_BLUE );
     scanf ( "%s", buf );
     getchar ( );
 
@@ -83,4 +83,69 @@ Prog_Mode_t interface_input ( )
     }
 
     return MODE_ERROR;
+}
+
+char *File_Skip_Spaces ( char *data, int file_size ) // +
+{
+    assert ( data != nullptr );
+
+    char *buffer = (char *)calloc ( file_size + 1, sizeof ( char ) );
+    if ( !buffer ) {
+        perror ( "buffer memory allocation error\n" );
+
+        return data;
+    } // fix error
+    int position = 0;
+
+    //TODO: выход за границу
+    for ( ; *data != '\0' && position < file_size; ++data ) {
+        while ( isspace ( *data ) && position < file_size ) {
+            ++data;
+        }
+        buffer[position++] = *data;
+    }
+    buffer[position] = '\0';
+
+    return buffer;
+}
+
+Errors_t File_Reader ( struct File_t *file )  // -
+{
+    assert ( file != nullptr );
+
+    file->front_f = fopen ( file->file_name, "r" );
+    if ( !file->front_f ) {
+        print_color ( "File opening error\n", COLOR_RED );
+
+        return ERR_FREAD;
+    }
+
+    file->file_size = Get_File_Size ( file->front_f );
+
+    file->out_buffer = ( char *)calloc ( file->file_size + 1, sizeof ( char ) );
+    if ( !file->out_buffer ) {
+        print_color ( "buffer memory allocation error\n", COLOR_RED );
+        fclose ( file->front_f );
+
+        return ERR_FREAD;
+    }
+
+    int ret_code = fread ( file->out_buffer, sizeof( file->out_buffer[0] ),
+                           file->file_size, file->front_f );
+    if ( ret_code != file->file_size ) {
+        if ( feof ( file->front_f ) ) {
+            perror ( "Error reading test.bin: unexpected end of file\n" );
+        }
+        else if ( ferror ( file->front_f ) ) {
+            perror ( "Error reading test.bin" );
+        }
+        free ( file->out_buffer );
+        fclose ( file->front_f );
+
+        return ERR_FREAD;
+    }
+
+    fclose ( file->front_f );
+
+    return OK_FILE;
 }

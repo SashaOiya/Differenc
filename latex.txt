@@ -1,0 +1,9 @@
+\documentclass{article}
+\usepackage{amsmath, amsfonts, amssymb, amsthm, mathtools}
+ \usepackage{physics}
+\begin{document}
+
+\[(2+4-7 \cdot x)+(2^4)\]
+
+\[(2+4-7 \cdot x)+(2^4)\]
+\end{document}

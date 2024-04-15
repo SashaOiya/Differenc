@@ -15,7 +15,7 @@ Node_t *Get_Number ( struct Position_t *position )
     int value = 0;
     int prev_index = position->index;
 
-    while ( isdigit ( position->data[position->index] ) ) {    // strtod
+    while ( isdigit ( position->data[position->index] ) ) {
         value = value * 10 + position->data[position->index] - '0';
         ++(position->index);
     }
@@ -80,7 +80,7 @@ Node_t *Get_Expression ( struct Position_t *position )
     Node_t *term_node = Get_Term ( position );
 
     int element = 0;
-    while ( element = Get_Binary_Element ( position->data[position->index], MODE_ADD_SUB ) ) {
+    while ( ( element = Get_Binary_Element ( position->data[position->index], MODE_ADD_SUB ) ) != 0 ) {
         (position->index)++;
         Node_t *term_node_right = Get_Term ( position );
 
@@ -95,7 +95,7 @@ Node_t *Get_Term ( struct Position_t *position )
     Node_t *part_node = Get_Power ( position );
 
     int element = 0;  // char
-    while ( element = Get_Binary_Element ( position->data[position->index], MODE_MUL_DIV ) ) {
+    while ( ( element = Get_Binary_Element ( position->data[position->index], MODE_MUL_DIV ) ) != 0 ) {
         (position->index)++;
         Node_t *part_node_right = Get_Power ( position );
 
@@ -128,14 +128,16 @@ Node_t *Get_Partititon ( struct Position_t *position )
 
 Node_t *Get_Negative_Num ( struct Position_t *position )
 {
-    // assert
+    assert ( position != nullptr );
 
     if ( position->data[position->index] == '-' ) {
         (position->index)++;
-        Node_t *num_node = Get_Number ( position );
-        num_node->value  = num_node->value * (-1);
+        Node_t *num_node = Get_Partititon ( position );  \
+        //
+        Node_t *neg_node = Create_Node ( NODE_TYPE_NUM, -1, nullptr, nullptr );
+        Node_t *value    = Create_Node ( NODE_TYPE_OP, OP_MUL, neg_node, num_node );
 
-        return num_node;
+        return value;
     }
 
     return Get_Number ( position );
@@ -143,6 +145,8 @@ Node_t *Get_Negative_Num ( struct Position_t *position )
 
 Node_t *Get_Power ( struct Position_t *position )
 {
+    assert ( position != nullptr );
+
     Node_t *part_node_1 = Get_Partititon ( position );
 
     if ( position->data[position->index] == '^' ) {
